@@ -398,7 +398,7 @@ height:50vh;
         <p><strong>总结一下蓝牙开发相关的知识点和注意事项，做个笔记，也希望你们能少踩坑</strong></p>
 <p>(公司部分蓝牙项目为混编项目，蓝牙相关处理均采用了Objective-C，故本文🌰均采用OC，Swift处理相同)</p>
 <hr>
-<p>###蓝牙4.0BLE和传统蓝牙<br>蓝牙4.0包含两个蓝牙标准，它是一个是<strong>双模</strong>的标准，它包含<strong>传统蓝牙部分(也称经典蓝牙)</strong>和<strong>低功耗蓝牙部分(BLE)</strong>, 二者适用于不同的应用场景和应用条件。他们的特点如下</p>
+<h3 id="蓝牙4-0BLE和传统蓝牙"><a href="#蓝牙4-0BLE和传统蓝牙" class="headerlink" title="蓝牙4.0BLE和传统蓝牙"></a>蓝牙4.0BLE和传统蓝牙</h3><p>蓝牙4.0包含两个蓝牙标准，它是一个是<strong>双模</strong>的标准，它包含<strong>传统蓝牙部分(也称经典蓝牙)</strong>和<strong>低功耗蓝牙部分(BLE)</strong>, 二者适用于不同的应用场景和应用条件。他们的特点如下</p>
 <ul>
 <li><strong>传统蓝牙：</strong> 传统蓝牙可以用与数据量比较大的传输，如语音，音乐，较高数据量传输等</li>
 <li><strong>低功耗蓝牙：</strong> 低功耗蓝牙这样应用于实时性要求比较高，但是数据速率比较低的产品，如遥控类的，如鼠标，键盘，遥控鼠标(Air Mouse)，传感设备的数据发送，如心跳带，血压计，温度传感器等</li>
@@ -407,7 +407,7 @@ height:50vh;
 <p>蓝牙4.0支持两种部署方式：<strong>双模式</strong>和<strong>单模式</strong>，双模同时支持经典蓝牙和低功耗蓝牙，而单模则只支持其中一种。</p>
 <p>二者更多细节详见： <a href="https://www.jianshu.com/p/c96e0006b34d" target="_blank" rel="noopener">传统蓝牙和低功耗蓝牙的区别</a></p>
 <hr>
-<p>###API字段描述<br>iOS中蓝牙相关功能都封装进了<strong>CoreBluetooth</strong>类中,其中有几个常见的参数和概念</p>
+<h3 id="API字段描述"><a href="#API字段描述" class="headerlink" title="API字段描述"></a>API字段描述</h3><p>iOS中蓝牙相关功能都封装进了<strong>CoreBluetooth</strong>类中,其中有几个常见的参数和概念</p>
 <table>
 <thead>
 <tr>
@@ -436,8 +436,7 @@ height:50vh;
 </table>
 <p>具体API参考<a href="http://www.cocoachina.com/ios/20180117/21889.html" target="_blank" rel="noopener">CoreBluetooth蓝牙开发</a></p>
 <hr>
-<p>###Mac地址：</p>
-<p>保存到数组中的设备可通过<strong>UUID</strong>来进行区分。从 iOS7之后苹果不提供外设的mac地址，外设的唯一标识换成了由mac封装加密后的UUID，需要注意的是不同的手机获取同一个外设的UUID是不同的，所以在不同手机之间UUID不是唯一的，但在本机上可以作为唯一标识(特殊情况手机刷机后也会改变UUID)。</p>
+<h3 id="Mac地址："><a href="#Mac地址：" class="headerlink" title="Mac地址："></a>Mac地址：</h3><p>保存到数组中的设备可通过<strong>UUID</strong>来进行区分。从 iOS7之后苹果不提供外设的mac地址，外设的唯一标识换成了由mac封装加密后的UUID，需要注意的是不同的手机获取同一个外设的UUID是不同的，所以在不同手机之间UUID不是唯一的，但在本机上可以作为唯一标识(特殊情况手机刷机后也会改变UUID)。</p>
 <p><strong>如何获取Mac地址</strong></p>
 <ul>
 <li>连接前：可通过广播包里的特定字段来获取，前提是和硬件工程师协商好<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary&lt;NSString *,id&gt; *)advertisementData RSSI:(NSNumber *)RSSI</span><br></pre></td></tr></table></figure>
@@ -451,8 +450,7 @@ height:50vh;
 </ul>
 <p><strong>一般使用场景是根据Mac地址区分某个外设</strong></p>
 <hr>
-<p>###写入数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">MARK: 发送数据</span><br><span class="line">-(void)sendDataToBLE:(NSData *)data&#123;</span><br><span class="line">    if(nil != self.characteristic)&#123;</span><br><span class="line">        // data: 数据data</span><br><span class="line">        // characteristic: 发送给哪个特征</span><br><span class="line">        // type:     CBCharacteristicWriteWithResponse,  CBCharacteristicWriteWithoutResponse,</span><br><span class="line">        // 这里要跟硬件确认好，写入的特征是否有允许写入，允许用withResponse 不允许只能强行写入，用withoutResponse</span><br><span class="line">        // 或者根据 回调的error查看一下是否允许写入，下面说</span><br><span class="line">        // 比如这里是不允许写入的，所以用 WithoutResponse</span><br><span class="line">        [self.peripheral writeValue:data forCharacteristic:self.characteristic type:CBCharacteristicWriteWithoutResponse];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="写入数据"><a href="#写入数据" class="headerlink" title="写入数据"></a>写入数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">MARK: 发送数据</span><br><span class="line">-(void)sendDataToBLE:(NSData *)data&#123;</span><br><span class="line">    if(nil != self.characteristic)&#123;</span><br><span class="line">        // data: 数据data</span><br><span class="line">        // characteristic: 发送给哪个特征</span><br><span class="line">        // type:     CBCharacteristicWriteWithResponse,  CBCharacteristicWriteWithoutResponse,</span><br><span class="line">        // 这里要跟硬件确认好，写入的特征是否有允许写入，允许用withResponse 不允许只能强行写入，用withoutResponse</span><br><span class="line">        // 或者根据 回调的error查看一下是否允许写入，下面说</span><br><span class="line">        // 比如这里是不允许写入的，所以用 WithoutResponse</span><br><span class="line">        [self.peripheral writeValue:data forCharacteristic:self.characteristic type:CBCharacteristicWriteWithoutResponse];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//MARK: 发送数据成功回调</span><br><span class="line">-(void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error&#123;</span><br><span class="line">    if (error) &#123;</span><br><span class="line">        NSLog(@&quot;写入数据失败:(%@)\n error:%@&quot;,characteristic,error.userInfo);</span><br><span class="line">        // 这里用withResponse如果报错：&quot;Writing is not permitted.&quot;说明设备不允许写入，这个时候要用 WithoutResponse</span><br><span class="line">        // 使用 WithoutResponse的时候，不走这个代理。</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    NSLog(@&quot;写入数据成功:%@&quot;,characteristic);</span><br><span class="line">    [peripheral readValueForCharacteristic:characteristic];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>注意点：</strong></p>
 <ul>
@@ -469,13 +467,12 @@ height:50vh;
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; [data length]; i += maxValue) &#123;</span><br><span class="line">       // 预加 最大包长度，如果依然小于总数据长度，可以取最大包数据大小</span><br><span class="line">       if ((i + maxValue) &lt; [data length]) &#123;</span><br><span class="line">           NSString *rangeStr = [NSString stringWithFormat:@&quot;%i,%i&quot;, i, maxValue];</span><br><span class="line">           NSData *subData = [data subdataWithRange:NSRangeFromString(rangeStr)];</span><br><span class="line">           [self sendDataToBLE:subData];</span><br><span class="line">           // 根据接收模块的处理能力做相应延时</span><br><span class="line">           usleep(10 * 1000);</span><br><span class="line">       &#125;</span><br><span class="line">       else &#123;</span><br><span class="line">           NSString *rangeStr = [NSString stringWithFormat:@&quot;%i,%i&quot;, i, (int)([data length] - i)];</span><br><span class="line">           NSData *subData = [data subdataWithRange:NSRangeFromString(rangeStr)];</span><br><span class="line">           [self sendDataToBLE:subData];</span><br><span class="line">           usleep(10 * 1000);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 <p><strong>这边延时主要是设备侧的接收模块接收数据以及处理能力有限</strong></p>
 <hr>
-<p>###心跳包<br>外围设备测和中心设备(大部分情况下是手机)保持蓝牙连接的状态下，如果长时间不产生交互，蓝牙就会断开，所以为了保持两者持续的连接状态，需要做保活处理，也就是需要持续的发送心跳包(watchdog)。相应的处理是使用一个定时器定时向设备侧发送符合设备协议格式的心跳包。</p>
+<h3 id="心跳包"><a href="#心跳包" class="headerlink" title="心跳包"></a>心跳包</h3><p>外围设备测和中心设备(大部分情况下是手机)保持蓝牙连接的状态下，如果长时间不产生交互，蓝牙就会断开，所以为了保持两者持续的连接状态，需要做保活处理，也就是需要持续的发送心跳包(watchdog)。相应的处理是使用一个定时器定时向设备侧发送符合设备协议格式的心跳包。</p>
 <hr>
-<p>###断开&amp;重连：</p>
-<p>断开连接很简单，只需要调用<strong>[self.centralManager cancelPeripheralConnection:peripheral]</strong>传入需要断开连接的设备对象就行了。断开连接时会自动调用<strong>centralManager:didDisconnectPeripheral:error:</strong>代理方法。<br>按照之前的惯例，当error为nil时表示断开成功，error不为nil时断开失败。这种理解是错误的。</p>
+<h3 id="断开-amp-重连："><a href="#断开-amp-重连：" class="headerlink" title="断开&amp;重连："></a>断开&amp;重连：</h3><p>断开连接很简单，只需要调用<strong>[self.centralManager cancelPeripheralConnection:peripheral]</strong>传入需要断开连接的设备对象就行了。断开连接时会自动调用<strong>centralManager:didDisconnectPeripheral:error:</strong>代理方法。<br>按照之前的惯例，当error为nil时表示断开成功，error不为nil时断开失败。这种理解是错误的。</p>
 <p>当你调用<strong>cancelPeripheralConnection:</strong>方法（主动断开）断开连接时error为nil ; 没有调用这个方法（异常断开）而断开时error返回的是异常断开的原因。也可以理解为主动调用断开连接方法一定会断开</p>
 <p>接下来就是断开重连的问题了，对蓝牙功能进行封装时肯定少不了断开重连。首先断开时可通过上面的代理方法的error是否为nil判断是否是异常断开，一般情况下异常断开时是需要重连的</p>
-<p>####重新连接后发现读写数据时没效果了？？？<br>原因就是当设备断开连接后<strong>peripheral.services</strong>为nil了，当然<strong>service.characteristics</strong>也是nil，所以需要在断开连接时把保存这个设备对应的服务和特征全部清除，然后在连接成功时重新过一遍发现服务和发现特征的流程就好了。</p>
+<h4 id="重新连接后发现读写数据时没效果了？？？"><a href="#重新连接后发现读写数据时没效果了？？？" class="headerlink" title="重新连接后发现读写数据时没效果了？？？"></a>重新连接后发现读写数据时没效果了？？？</h4><p>原因就是当设备断开连接后<strong>peripheral.services</strong>为nil了，当然<strong>service.characteristics</strong>也是nil，所以需要在断开连接时把保存这个设备对应的服务和特征全部清除，然后在连接成功时重新过一遍发现服务和发现特征的流程就好了。</p>
 <hr>
 <h3 id="iBeacon"><a href="#iBeacon" class="headerlink" title="iBeacon"></a>iBeacon</h3><p><strong>iOS7</strong>开始，Apple加入了Beacon围栏检测的API, (<a href="https://zh.wikipedia.org/zh-hans/IBeacon" target="_blank" rel="noopener">iBeacon-维基百科</a>), 其工作方式是，配备有低功耗蓝牙（BLE）通信功能的设备使用 BLE 技术向周围发送自己特有的 ID，接收到该 ID 的应用软件会根据该 ID 采取一些行动。比如，在店铺里设置 iBeacon 通信模块的话，便可让 iPhone 和 iPad 上运行一资讯告知服务器，或者由服务器向顾客发送折扣券及进店积分, 或者公司的手机打卡，只要手机靠近打卡器一定范围，手机测就向打开器发送打卡信息，从而自动打卡。这种场景还有很多。<strong>其中一个最重要的功能就是App的唤醒功能(杀死后也能唤醒)</strong></p>
 <p>举一个我们的例子，我们的产品业务场景就是在进入车辆以后，需要使用蓝牙连接我们的后装车载设备以采集车辆信息和驾驶行为行程等，这里有一个问题就是在App被杀死的情况下如何唤醒App, 因为不可能要求用户每次都主动去打开App，这样体验太差。我们的做法是通过iBeacon，当我们的车辆点火以后，设备测通电，发出<strong>iBeacon广播</strong>，App实现监听iBeacon相关功能后就可以唤醒我们App，然后在相应的回调的处理一些事情，比如通过蓝牙连接设备。这里的前提条件是我们的硬件设备测包含iBeacon模块，具有iBeacon功能，而且对iBeacon的广播频率也有一定的要求，长了可能唤醒的功能会不稳定，官方建议的好像是100ms，频率超高越耗电，但可以让手机或其它监听设备越快地发现iBeacon。标准的BLE广播距离是100m，这使Beacon在室内位置跟踪场景下的效果更理想。</p>
@@ -483,8 +480,7 @@ height:50vh;
 <p><a href="http://pingguohe.net/2018/02/01/ibeacon.html" target="_blank" rel="noopener">苹果核 - iOS端近场围栏检测（一） ——iBeacon</a></p>
 <p><a href="http://southpeak.github.io/2014/07/27/ibeacon-exploration/" target="_blank" rel="noopener">iBeacon技术初探</a></p>
 <hr>
-<p>##相关阅读：</p>
-<ul>
+<h2 id="相关阅读："><a href="#相关阅读：" class="headerlink" title="相关阅读："></a>相关阅读：</h2><ul>
 <li><p><a href="https://www.cnblogs.com/nelsen-chen/p/9018451.html" target="_blank" rel="noopener">iOS - Bluetooth 蓝牙</a></p>
 </li>
 <li><p><a href="http://muhlenxi.com/2017/05/03/iOS-Bluetooth-Low-Energy-Develop-Chapter4/" target="_blank" rel="noopener">iOS BLE 开发小记[4] - 如何实现 CoreBluetooth 后台运行模式</a></p>
@@ -610,7 +606,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#iBeacon"><span class="toc-number">1.</span> <span class="toc-text">iBeacon</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#蓝牙4-0BLE和传统蓝牙"><span class="toc-number">1.</span> <span class="toc-text">蓝牙4.0BLE和传统蓝牙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#API字段描述"><span class="toc-number">2.</span> <span class="toc-text">API字段描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mac地址："><span class="toc-number">3.</span> <span class="toc-text">Mac地址：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写入数据"><span class="toc-number">4.</span> <span class="toc-text">写入数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#心跳包"><span class="toc-number">5.</span> <span class="toc-text">心跳包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断开-amp-重连："><span class="toc-number">6.</span> <span class="toc-text">断开&amp;重连：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#重新连接后发现读写数据时没效果了？？？"><span class="toc-number">6.1.</span> <span class="toc-text">重新连接后发现读写数据时没效果了？？？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iBeacon"><span class="toc-number">7.</span> <span class="toc-text">iBeacon</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关阅读："><span class="toc-number"></span> <span class="toc-text">相关阅读：</span></a>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -623,8 +619,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
     
     
     
