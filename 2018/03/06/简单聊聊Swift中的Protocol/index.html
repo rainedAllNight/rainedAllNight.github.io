@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="luowei">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="luowei">
+    
+    <meta name="keywords" content="RainedAllNight‘s Blog">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>简单聊聊Swift中的Protocol · RainedAllNight‘s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">RainedAllNight‘s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">简单聊聊Swift中的Protocol</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">RainedAllNight‘s Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            简单聊聊Swift中的Protocol
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.8k</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/03/06</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Swift中的Protocol"><a href="#Swift中的Protocol" class="headerlink" title="Swift中的Protocol"></a>Swift中的Protocol</h1><p>众所周知，Swift是一门面向协议编程(Protocol Oriented Programming 以下简称POP)的语言，其中许多标准库均是基于此来实现的。由于以往使用面向对象的语言的惯性，以至于实际开发中并没有养成面向协议编程的思维习惯。本文将简单来聊聊Swift中的Protocol，以及我们为什么要面向protocol编程，以加深对其的印象和了解。</p>
+<h2 id="Swift协议的基本功能"><a href="#Swift协议的基本功能" class="headerlink" title="Swift协议的基本功能"></a>Swift协议的基本功能</h2><p>####协议方法<br>协议可以要求遵循协议的类型实现某些指定的实例方法或类方法。不支持为协议中的方法的参数提供默认值。功能和Objective-C中基本一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">protocol CoinProtocol &#123;</span><br><span class="line"></span><br><span class="line">    func tradingPlatform() -&gt; String</span><br><span class="line">    </span><br><span class="line">    func sell()</span><br><span class="line">    </span><br><span class="line">    func buy()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你想定义为可选方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@objc protocol CoinProtocol &#123;</span><br><span class="line">    </span><br><span class="line">    @objc optional func tradingPlatform() -&gt; String</span><br><span class="line">    </span><br><span class="line">    @objc optional func sell()</span><br><span class="line">    </span><br><span class="line">    @objc optional func buy()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相比<strong>Objective-C</strong>，<strong>Swift</strong>中的协议提供了一些更加丰富的功能</p>
+<p>####协议属性<br>协议可以要求遵循协议的类型提供特定名称和类型的实例属性或类型属性，它只指定属性的名称和类型，协议还指定属性是可读的还是可读可写的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">protocol CoinProtocol &#123;</span><br><span class="line">    var name: String &#123;get&#125;</span><br><span class="line">    var price: Double &#123;get set&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="协议作为类型"><a href="#协议作为类型" class="headerlink" title="协议作为类型"></a>协议作为类型</h4><p>协议可以像其他普通类型一样使用，使用场景如下：</p>
+<ul>
+<li>作为函数方法的参数或者返回值类型</li>
+<li>作为常量变量或者属性的类型</li>
+<li>作为集合中元素的类型</li>
+</ul>
+<h4 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h4><p>代理模式，很常用的一种设计模式；不管是Cocoa还是日常开发中都能常看到</p>
+<h4 id="协议支持继承、聚合"><a href="#协议支持继承、聚合" class="headerlink" title="协议支持继承、聚合"></a>协议支持继承、聚合</h4><p>协议能够继承一个或多个其他协议，可以在继承的协议的基础上增加新的要求。协议的继承语法与类的继承相似，多个被继承的协议间用逗号分隔：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protocol InheritingProtocol: SomeProtocol, AnotherProtocol &#123;</span><br><span class="line">    // 这里是协议的定义部分</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有时候需要同时遵循多个协议，你可以将多个协议采用 SomeProtocol &amp; AnotherProtocol 这样的格式进行组合，称为 协议合成（protocol composition）。你可以罗列任意多个你想要遵循的协议，以与符号(&amp;)分隔。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protocol InheritingProtocol: SomeProtocol &amp; AnotherProtocol &#123;</span><br><span class="line">    // 这里是协议的定义部分</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="关联类型-associatedtype"><a href="#关联类型-associatedtype" class="headerlink" title="关联类型(associatedtype)"></a>关联类型(associatedtype)</h4><p>使用<strong>associatedtype</strong>来定义一个在协议中使用的关联类型(可以理解为协议中的泛型)<br>此类型需要在实现协议的类中定义和指明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">protocol Unitable &#123;</span><br><span class="line">    associatedtype Unit</span><br><span class="line">    </span><br><span class="line">    func calculatingUnit() -&gt; Unit</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class People: Unitable &#123;</span><br><span class="line">    typealias Unit = Int</span><br><span class="line">    </span><br><span class="line">    func calculatingUnit() -&gt; Int &#123;</span><br><span class="line">        return 1</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class RMB: Unitable &#123;</span><br><span class="line">    typealias Unit = Double</span><br><span class="line">    </span><br><span class="line">    func calculatingUnit() -&gt; Double &#123;</span><br><span class="line">        return 1.0</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是一个比较简陋的例子，定义了一个单位计算协议，当People类遵循协议时，计算单位为<strong>Int</strong>，当RMB类遵循协议时，计算单位为<strong>Double</strong></p>
+<h4 id="通过扩展遵循协议"><a href="#通过扩展遵循协议" class="headerlink" title="通过扩展遵循协议"></a>通过扩展遵循协议</h4><p>可以通过扩展类型来遵循协议，可以为已有类型添加方法和属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class BTC &#123;</span><br><span class="line">    // ....</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extension BTC: CoinType &#123;</span><br><span class="line"></span><br><span class="line">    func tradingPlatform() -&gt; String &#123;</span><br><span class="line">        return &quot;Binance&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func sell() &#123;</span><br><span class="line">        // sell</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func buy() &#123;</span><br><span class="line">        // buy</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="协议扩展"><a href="#协议扩展" class="headerlink" title="协议扩展"></a>协议扩展</h4><p>协议可以通过扩展来为遵循协议的类型提供属性、方法以及下标的实现。通过这种方式，你可以基于协议本身来实现这些功能，而无需在每个遵循协议的类型中都重复同样的实现，从而达到了协议的默认实现的功能，并且在协议扩展中还可以为协议添加限制条件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">extension CoinType where Self: BTC &#123;</span><br><span class="line">    func tradingPlatform() -&gt; String &#123;</span><br><span class="line">        return &quot;default platform&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func sell() &#123;</span><br><span class="line">        print(&quot;sell all coin&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func buy() &#123;</span><br><span class="line">        print(&quot;buy BTC?&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>协议扩展中需要注意的两点是：</strong></p>
+<p>1.通过协议扩展为协议要求提供的默认实现和可选的协议要求不同。虽然在这两种情况下，遵循协议的类型都无需自己实现这些要求，但是通过扩展提供的默认实现可以直接调用，而无需使用可选链式调用。</p>
+<p>2.如果多个协议扩展都为同一个协议要求提供了默认实现，而遵循协议的类型又同时满足这些协议扩展的限制条件，那么将会使用限制条件最多的那个协议扩展提供的默认实现。</p>
+<hr>
+<p><strong>部分摘抄自官方文档，更详细的参见<a href="http://wiki.jikexueyuan.com/project/swift/chapter2/22_Protocols.html" target="_blank" rel="noopener">Swift-Protocol</a></strong></p>
+<p><strong>简单介绍完基本概念，我们来看看协议在Swift中的一些基础库中的应用</strong></p>
+<p>在讲之前，我们大体可以把标准库中的协议类型分为三种</p>
+<ul>
+<li><strong>Can do</strong> </li>
+<li><strong>Is a</strong></li>
+<li><strong>Can be</strong></li>
+</ul>
+<h4 id="1-Can-do"><a href="#1-Can-do" class="headerlink" title="1.Can do"></a>1.Can do</h4><p>表示的是协议能够做某件事或者实现某些功能，最常见的一个例子是<strong>Hashable</strong>，遵循此协议的类型表示具有可hash的功能，这表示你可以得到这个类的整型散列值，把它当做一个字典的Key值等等。这种协议大都以<strong>able</strong>结尾，这也比较符合它的语义</p>
+<p>类似的还有<strong>RawRepresentable</strong>这个协议，它能够让遵循它的类获得类似于枚举中的初始值的功能，可以从一个原始值来初始化，或者获得类型对象的原始值</p>
+<p>其实我们也可以使用基础库的一些协议来实现一些功能，比如使用<strong>RawRepresentable</strong>来规范和管理Storyboard中的界面跳转<br>正常情况下我们的segue跳转时一个controller会对应到一个<strong>identifier</strong>，而这个identifier由于多次使用分散在各处，很容易拼写错误然后导致crash，<br>可以利用枚举来尝试下解决这个问题</p>
+<p>首先我们定义一个<strong>Segueable</strong>的协议</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">protocol Segueable &#123;</span><br><span class="line">    associatedtype CustomSegueIdentifier: RawRepresentable</span><br><span class="line">    </span><br><span class="line">    func performCustomSegue(_ segue: CustomSegueIdentifier, sender: Any?)</span><br><span class="line">    </span><br><span class="line">    func customSegueIdentifier(forSegue segue: UIStoryboardSegue) -&gt; CustomSegueIdentifier</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定义了一个遵循<strong>RawRepresentable</strong>协议的关联类型，两个方法，一个跳转的，一个获取identifier的。</p>
+<p>我们在扩展中给这两个方法提供下默认实现，顺便约束一下协议实现的类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">extension KYXSegueable where Self: UIViewController, CustomSegueIdentifier.RawValue == String &#123;</span><br><span class="line">    </span><br><span class="line">    func performCustomSegue(_ segue: CustomSegueIdentifier, sender: Any?) &#123;</span><br><span class="line">        performSegue(withIdentifier: segue.rawValue, sender: sender)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func customSegueIdentifier(forSegue segue: UIStoryboardSegue) -&gt; CustomSegueIdentifier &#123;</span><br><span class="line">        guard let identifier = segue.identifier, let customSegueIndentifier = CustomSegueIdentifier(rawValue: identifier) else &#123;</span><br><span class="line">            fatalError(&quot;Cannot get custom segue indetifier for segue: \(segue.identifier ?? &quot;&quot;)&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return customSegueIndentifier</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>我们可以这样使用</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">class SegueTestViewController: UIViewController, KYXSegueable &#123;</span><br><span class="line">    </span><br><span class="line">    typealias CustomSegueIdentifier = SegueType</span><br><span class="line">    </span><br><span class="line">    enum SegueType: String &#123;</span><br><span class="line">        case login = &quot;loginSegue&quot;</span><br><span class="line">        case regist = &quot;registSegue&quot;</span><br><span class="line">        case other = &quot;otherSegue&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    override func viewDidLoad() &#123;</span><br><span class="line">        super.viewDidLoad()</span><br><span class="line"></span><br><span class="line">        // Do any additional setup after loading the view.</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @IBAction func handleLoginButtonAction() &#123;</span><br><span class="line">        self.performCustomSegue(.login, sender: nil)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    override func prepare(for segue: UIStoryboardSegue, sender: Any?) &#123;</span><br><span class="line">        let segueType = self.customSegueIdentifier(forSegue: segue)</span><br><span class="line">        </span><br><span class="line">        switch segueType &#123;</span><br><span class="line">        case .login:</span><br><span class="line">            print(&quot;login&quot;)</span><br><span class="line">            </span><br><span class="line">        case .regist:</span><br><span class="line">            print(&quot;regist&quot;)</span><br><span class="line">            </span><br><span class="line">        default:</span><br><span class="line">            print(&quot;other&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以在提供的关联类型中定义我们跳转的identifier，使用枚举的<strong>Switch</strong>来匹配和判断不同的跳转</p>
+<h4 id="2-Is-a"><a href="#2-Is-a" class="headerlink" title="2. Is a"></a>2. Is a</h4><p>这类在基础库中占大部分，大都基本上以<strong>Type</strong>结尾，简单可以理解为是某种类型，表明遵守它的类具有某种身份, 拥有这种身份后可以拥有身份所具有的一些特征和功能。当然一个类型可以拥有多种身份，由于Swift中不支持多继承，使用这种协议可以实现一些多继承的场景。</p>
+<p>常见的如<strong>ErrorType</strong>，表明当前类型具有可出现Error的身份，也就相应的具有处理error的功能和一些Error的特征。</p>
+<p>值得注意的是在<strong>Swift3.0</strong>之后基础库中所有以<strong>Type</strong>结尾的 “is a”类型的协议，都统一去除了type字段，如<strong>ErrorType</strong>变成了<strong>Error</strong>，<strong>CollectionType</strong>变成了<strong>Collection</strong>，这样也更符合Swift语法简练的特点和理念</p>
+<h4 id="3-Can-be"><a href="#3-Can-be" class="headerlink" title="3. Can be"></a>3. Can be</h4><p>可以成为<strong> 可以转换成</strong>，例如A可以转换成为B，一般以 <strong>Convertible</strong>结尾。<br>如常见的<strong>CustomStringConvertible</strong>，实现以后可以自定义当前类的输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Rectangle: CustomStringConvertible &#123;</span><br><span class="line">    var length = 10</span><br><span class="line">    var width = 20</span><br><span class="line">    </span><br><span class="line">    var description: String &#123;</span><br><span class="line">        return &quot;\(width * length)&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func log() &#123;</span><br><span class="line">        print(self)</span><br><span class="line">        // 输出面积 200</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再如<strong>CustomStringConvertible</strong>现在弃用改成了<strong>ExpressibleByStringLiteral</strong>，实现此协议的类型可以通过字面量的形式赋值初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">struct People &#123;</span><br><span class="line">    var name: String = &quot;&quot;</span><br><span class="line">    var age: Int = 0</span><br><span class="line">    var gender: Int = 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extension People: ExpressibleByStringLiteral &#123;</span><br><span class="line">    typealias StringLiteralType = String</span><br><span class="line">    </span><br><span class="line">    public init(stringLiteral value: String) &#123;</span><br><span class="line">        self = People()</span><br><span class="line">        self.name = value</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以直接通过<strong>字符串</strong>(人名)的方式来直接初始化一个<strong>People</strong>对象了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let xiaoming: People = &quot;xiaoming&quot;</span><br></pre></td></tr></table></figure>
+<p>或者扩展一下，这样来操作一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">extension URL: ExpressibleByStringLiteral &#123;</span><br><span class="line">    public init(stringLiteral value: String) &#123;</span><br><span class="line">        guard let url = URL(string: value) else &#123;</span><br><span class="line">           preconditionFailure(&quot;url transform is failure&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">        self = url</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以直接通过字面量的形式来创建和使用URL了</p>
+<p><strong>我们可以根据基础库协议库中的几个大的分类来选择在我们业务开发中使用协议的场景和姿势</strong></p>
+<hr>
+<p><strong>那么为什么我们要使用协议呢，或者说使用协议编程能给我们带来什么，能够解决哪些痛点和问题呢，下面我们就来简单的探讨一下</strong></p>
+<h2 id="Why-is-Protocol"><a href="#Why-is-Protocol" class="headerlink" title="Why is Protocol"></a>Why is Protocol</h2><p>举个栗子，有如下的继承关系的一个需求<br><img src="http://upload-images.jianshu.io/upload_images/1785771-d071a047f57ac2f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="E843D966-49C9-401C-9CDB-C0A982D03DF6.png"></p>
+<p>我们使用传统的面向对象的方式去解决这个问题时，思路大都如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class Animal &#123;</span><br><span class="line">    var age: Int &#123; return 0 &#125;</span><br><span class="line">    var gender: Bool &#123; return true &#125; //假设为true为雄性</span><br><span class="line">    //.....等其他一些共有特征</span><br><span class="line">    </span><br><span class="line">    func eat() &#123;</span><br><span class="line">        print(&quot;eat food&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func excrete() &#123;</span><br><span class="line">        print(&quot;lababa&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定义了一个动物的基类，定义了动物的一些共有属性(动物特征)和一些共有方法(动物行为)，我们的子类都要继承于此基类，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">class Cat: Animal &#123;</span><br><span class="line">    override var age: Int &#123; return 1 &#125;</span><br><span class="line">    override var gender: Bool &#123; return false &#125;</span><br><span class="line">    </span><br><span class="line">    var legNum: Int = 4 //四条腿</span><br><span class="line">    </span><br><span class="line">    override func eat() &#123;</span><br><span class="line">        print(&quot;eat fish&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    func run() &#123;</span><br><span class="line">        print(&quot;runing cat&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func catchMouse() &#123;</span><br><span class="line">        print(&quot;捉老鼠&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Eagle: Animal &#123;</span><br><span class="line">    override var age: Int &#123; return 2 &#125;</span><br><span class="line">    </span><br><span class="line">    var leg: Int = 2 //两条腿</span><br><span class="line">    var wing: Int = 2 //两只翅膀</span><br><span class="line">    </span><br><span class="line">    override func eat() &#123;</span><br><span class="line">        print(&quot;eat meat&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func fly() &#123;</span><br><span class="line">        print(&quot;flying eagle&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Shark: Animal &#123;</span><br><span class="line">    override var age: Int &#123; return 3 &#125;</span><br><span class="line">    override var gender: Bool &#123; return false &#125;</span><br><span class="line">    </span><br><span class="line">    var tooth: Int = 100 //反正很多...</span><br><span class="line">    </span><br><span class="line">    override func eat() &#123;</span><br><span class="line">        print(&quot;eat other fish&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func swim() &#123;</span><br><span class="line">        print(&quot;swimming shark&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上，我们的<strong>Cat</strong>、<strong>Eagle</strong>、<strong>Shark</strong>分别通过基类的方式获得了基类的属性和一些方法，然后在子类里根据自身扩充一些属性和方法。这么一看确实是没什么问题。</p>
+<p>于是接下来园长说，我们动物园的动物太少了，需要新增一批动物，而且还要和原来的一起按照动物的种类来进行合理的分区饲养管理。新增名单为以下几位</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-22c5f9d8149de4a2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="76EC9504-C3F5-4B28-9082-BF6EB7949AFC.png"></p>
+<p>于是我们立马简单明了的按照了动物种类来做了以下区分</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-f858d16eda2a3173.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="02CDBE2B-1618-41D2-B834-252E8FD1BBA9.png"></p>
+<p>如图我们分别引入了<strong>哺乳动物</strong>、<strong>鸟类</strong>和<strong>鱼类</strong>这几个细分的基类，来做更加细分的处理，比如这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//鸟类</span><br><span class="line">class Birds: Animal &#123;</span><br><span class="line">    //鸟类的一些特征定义</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//鸵鸟</span><br><span class="line">class Ostrich: Birds &#123;</span><br><span class="line">    //..</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>于是问题就来了，按照如图来进行区分和管理真的可靠吗？我们知道大都哺乳动物是<strong>Runable</strong>的，但是很抱歉海豚是<strong>swim</strong>的，而不是<strong>Run</strong>；鸵鸟是<strong>Run</strong>的，而不是像大多数鸟类那样是<strong>Fly</strong>的。我们的前辈们为了能够对真实世界的对象进行建模，发展出了面向对象编程的概念，但是这套理念有一些缺陷。虽然我们努力用这套抽象和继承的方法进行建模，但是实际的事物往往是一系列特质的组合，而不单单是以一脉相承并逐渐扩展的方式构建的。我们不能在哺乳动物中定义通用的<strong>Run</strong>方法，因为它并不适用于所有的哺乳动物比如<strong>海豚</strong>，并且它还可以能适用于其他类型的对象，比如鸵鸟。那么我们怎么才能够在相同的继承关系(但是代码并不通用)和不同的继承关系的对象间共用代码呢。</p>
+<p>传统的做法是</p>
+<p>1.粘贴/复制：当然这种做法方便快捷，但是方式非常糟糕</p>
+<p>2.引入一个基类，在基类中定义通用的属性和方法；这种做法稍微靠谱点，但是基类会变得愈加臃肿，部分子类还会获得一些本身不需要的属性和方法。以后管理起来也是个大包袱</p>
+<p>3.多继承：遗憾的是在iOS的世界里并不支持。</p>
+<p>4.引入带有相关属性和方法的依赖对象，好像引入额外的依赖也并不是合适的方式</p>
+<p><strong>那么我们如何使用面向协议的姿势来解决上面的问题呢</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@objc protocol Runable &#123;</span><br><span class="line">   @objc optional func run()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@objc protocol Swimable &#123;</span><br><span class="line">   @objc optional func swim()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@objc protocol Flyable &#123;</span><br><span class="line">    @objc optional func fly()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们定义了两个协议，分别是<strong>Runable</strong>和<strong>Swimable</strong>，具有某种特性的动物只要实现对应的协议就可以拥有其相应的行为。比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">//鸟类</span><br><span class="line">class Birds: Animal, Flyable &#123;</span><br><span class="line">    //鸟类的一些特征定义</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//鸵鸟</span><br><span class="line">class Ostrich: Birds, Runable &#123;</span><br><span class="line">    func run() &#123;</span><br><span class="line">        print(&quot;i am ostrich, i can run&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//老鹰</span><br><span class="line">class Eagle: Birds &#123;</span><br><span class="line">    override var age: Int &#123; return 2 &#125;</span><br><span class="line">    </span><br><span class="line">    var leg: Int = 2 //两条腿</span><br><span class="line">    var wing: Int = 2 //两只翅膀</span><br><span class="line">    </span><br><span class="line">    override func eat() &#123;</span><br><span class="line">        print(&quot;eat meat&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func fly() &#123;</span><br><span class="line">        print(&quot;flying eagle&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再或者我们做的更干脆一点，抛掉<strong>Animal</strong>基类，来定义一个<strong>Animal</strong>的协议，任何满足此协议的对象都可以理解为是一个Animal，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@objc protocol Animal &#123;</span><br><span class="line">    @objc optional var age: Int &#123; get set &#125;</span><br><span class="line">    @objc optional var gender: Bool &#123; get set &#125;</span><br><span class="line">    </span><br><span class="line">    @objc optional func eat()</span><br><span class="line">    @objc optional func gender()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>于是我们上面的代码可以变成这样</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">//鸟类</span><br><span class="line">class Birds: Animal, Flyable &#123;</span><br><span class="line">    //鸟类的一些特征定义</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//鸵鸟</span><br><span class="line">class Ostrich: Birds, Runable &#123;</span><br><span class="line">    func run() &#123;</span><br><span class="line">        print(&quot;i am ostrich, i can run&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//老鹰</span><br><span class="line">class Eagle: Birds &#123;</span><br><span class="line">    var age: Int = 2</span><br><span class="line">    </span><br><span class="line">    var leg: Int = 2 //两条腿</span><br><span class="line">    var wing: Int = 2 //两只翅膀</span><br><span class="line">    </span><br><span class="line">    func eat() &#123;</span><br><span class="line">        print(&quot;eat meat&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func fly() &#123;</span><br><span class="line">        print(&quot;flying eagle&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上基本解决了我们面向对象编程时所面临的一些问题，而且具有高度的灵活性和更低的耦合性。</p>
+<p>记得下次有新的需求时，先想想用<strong>Protocol</strong>来实现怎么样?</p>
+<p>关于Protocol的更进一步进阶的使用例子请前往喵神的<a href="https://onevcat.com/2016/12/pop-cocoa-2/" target="_blank" rel="noopener">面向协议编程与 Cocoa 的邂逅 (下)</a></p>
+<hr>
+<p><strong>参考：</strong></p>
+<p><a href="https://onevcat.com/2016/11/pop-cocoa-1/" target="_blank" rel="noopener">面向协议编程与 Cocoa 的邂逅 (上)</a></p>
+<p><a href="http://www.cocoachina.com/swift/20160107/14868.html" target="_blank" rel="noopener">我从55个Swift标准库协议中学到了什么？</a></p>
+<p><a href="https://www.jianshu.com/p/e70bd6645d88" target="_blank" rel="noopener">Swift中协议的简单介绍</a></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">luowei</a>
+            </p><p>原文链接：<a href="http://yoursite.com/2018/03/06/简单聊聊Swift中的Protocol/">http://yoursite.com/2018/03/06/简单聊聊Swift中的Protocol/</a>
+            </p><p>发表日期：<a href="http://yoursite.com/2018/03/06/简单聊聊Swift中的Protocol/">March 6th 2018, 12:00:00 am</a>
+            </p><p>更新日期：<a href="http://yoursite.com/2018/03/06/简单聊聊Swift中的Protocol/">April 26th 2019, 5:19:02 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/" title="使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层">
+                    <div class="nextTitle">使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2017/12/07/说说最近的一些面试经历/" title="说说最近的t一些面试经历">
+                    <div class="prevTitle">说说最近的t一些面试经历</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzkzNi8yMDQ3Mg==">
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="https://github.com/rainedAllNight" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <a href="mailto:guardweielse@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="https://s2.ax1x.com/2019/04/26/EmfdF1.jpg">
+                </span>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Swift中的Protocol"><span class="toc-number">1.</span> <span class="toc-text">Swift中的Protocol</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Swift协议的基本功能"><span class="toc-number">1.1.</span> <span class="toc-text">Swift协议的基本功能</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#协议作为类型"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">协议作为类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代理模式"><span class="toc-number">1.1.0.2.</span> <span class="toc-text">代理模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#协议支持继承、聚合"><span class="toc-number">1.1.0.3.</span> <span class="toc-text">协议支持继承、聚合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关联类型-associatedtype"><span class="toc-number">1.1.0.4.</span> <span class="toc-text">关联类型(associatedtype)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过扩展遵循协议"><span class="toc-number">1.1.0.5.</span> <span class="toc-text">通过扩展遵循协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#协议扩展"><span class="toc-number">1.1.0.6.</span> <span class="toc-text">协议扩展</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Can-do"><span class="toc-number">1.1.0.7.</span> <span class="toc-text">1.Can do</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Is-a"><span class="toc-number">1.1.0.8.</span> <span class="toc-text">2. Is a</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Can-be"><span class="toc-number">1.1.0.9.</span> <span class="toc-text">3. Can be</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Why-is-Protocol"><span class="toc-number">1.2.</span> <span class="toc-text">Why is Protocol</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 13
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span><a class="archive-post-title" href="/2019/04/26/First-Essay/">First Essay</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/24</span><a class="archive-post-title" href="/2019/04/24/使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境/">使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2019/03/06/iOS蓝牙开发相关知识点和注意事项/">iOS蓝牙开发相关知识点和注意事项</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href="/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) ">使用Mac"智能文件夹"管理你的项目文件(同类型文件)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href="/2018/07/19/Swift-Tips/">Swift-Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span><a class="archive-post-title" href="/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/">使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2018/03/06/简单聊聊Swift中的Protocol/">简单聊聊Swift中的Protocol</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2017/12/07/说说最近的一些面试经历/">说说最近的t一些面试经历</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href="/2017/08/06/组件化实践之初体验/">组件化初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2017/04/02/iOS中的URL/">iOS中的URL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span><a class="archive-post-title" href="/2017/02/14/几个简单的轮子/">几个简单的轮子</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href="/2017/01/08/iOS-APP-几种常见特殊(异常-错误)情景的处理/">iOS-APP-几种常见特殊(异常-错误)情景的处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href="/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">iOS-tableViewCell自适应行高的计算(8-0及以后)</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "luowei"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

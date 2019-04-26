@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>iOS-tableViewCell自适应行高的计算(8-0及以后) · RainedAllNight‘s Blog</title>
+    <title>组件化初体验 · RainedAllNight‘s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/">RainedAllNight‘s Blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">iOS-tableViewCell自适应行高的计算(8-0及以后)</a>
+                <a href="#" class="post-name">组件化初体验</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            iOS-tableViewCell自适应行高的计算(8-0及以后)
+            组件化初体验
             <!-- 404 -->
             
         </h1>
@@ -266,12 +266,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">733</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3.2k</span>阅读时长: <span class="post-count reading-time">11 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2017/01/07</span>
+                    <span class="post-intro-time">2017/08/06</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -395,47 +395,111 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><blockquote>
-<p>tableView cell 自适应在我们的日常开发中经常会用到，假如你使用的是autolayout布局并且最低支持的版本是8.0及以上，本文可能会对你有所帮助</p>
-</blockquote>
-<h3 id="栗子："><a href="#栗子：" class="headerlink" title="栗子："></a>栗子：</h3><p><img src="http://upload-images.jianshu.io/upload_images/1785771-03cdb9848a86f2e0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果"></p>
-<p> <strong>效果如图，最终实现的是第三行文字高度自适应，来看下我们的实现</strong></p>
-<ul>
-<li><strong>代码部分(swift)：</strong><pre><code>override func viewDidLoad() {
-    super.viewDidLoad()
-    self.tableview.estimatedRowHeight = 80
-    self.tableview.rowHeight = UITableViewAutomaticDimension
-// Do any additional setup after loading the view, typically from a nib.   }
-</code></pre></li>
+        <h1 id="前因"><a href="#前因" class="headerlink" title="前因"></a>前因</h1><ul>
+<li>随着公司业务的发展和细化拆分，各业务端需自主开发，某些业务存在内嵌逻辑</li>
+<li>公司当前各端的项目存在重复的功能块和逻辑块</li>
+<li>业务发展的同时开发团队也在扩展，那么如何处理团队和项目发展带来的一些问题</li>
 </ul>
-<pre><code>func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell {
-      let cell = tableView.dequeueReusableCell(withIdentifier: &quot;TestTableViewCell&quot;, for: indexPath) as! TestTableViewCell
-      var contentText = &quot;这是一段很长的文字&quot;
-      for _ in 0...arc4random()%5 {
-        contentText = contentText + &quot;这是一段很长的文字&quot;
-      }
-      cell.contentLabel.text = contentText
-      return cell                                                    }
-</code></pre><p>  <strong> 解释：</strong>iOS8以后苹果为我们提供了一个 <strong>estimatedRowHeight</strong>  和 <strong>UITableViewAutomaticDimension</strong> 属性，直译过来分别为 <strong>预期高度</strong>和<strong> tableView自动尺寸</strong>，第一段代码的意思是设置tableView的预期高度为80并且设置tableView的行高为自动计算行高后所得到的值(当然这两个属性也可以通过相应的代理方法进行设置)，cellForRow和我们以往一样。这样在约束好以后，它就会自动帮我算好行高，可以这么理解，系统会帮我们把cell的行高算好，然后自动把这个值匹配给我们相应的cell。</p>
-<p>要实现这种效果还有一个重点就是关于 <strong>约束</strong>的问题，我们的约束必须要满足 <strong>self-sizing cell</strong>，简单来说就是我们需要换行高的那个label需要有相对于cell上下左右的约束(直接的约束或者通过其他控件的间接约束)，我们来看下栗子里的约束情况</p>
+<p><strong>一番调研之后，我们决定使用组件化来解决当前遇到的这些问题</strong></p>
+<h1 id="组件化"><a href="#组件化" class="headerlink" title="组件化"></a>组件化</h1><h3 id="1-什么是组件-模块化"><a href="#1-什么是组件-模块化" class="headerlink" title="1.什么是组件/模块化"></a>1.什么是组件/模块化</h3><p><strong>简单的来讲可以包括下面这两块</strong></p>
 <ul>
-<li><strong>约束部分：</strong></li>
+<li>独立的业务或功能块(细分来讲)</li>
+<li>多个功能和业务组成的模块(可以称之为大颗粒度的组件)</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1785771-b5cad0e26cf89bae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="约束"></p>
-<p>上边约束：距离subtitleLabel的底部为4<br>左边约束：图第三个约束，内容为与subtitleLabel的左边相等<br>下边约束：距离cell下边距离为 14<br>右边约束：距离cell右边距离为26</p>
-<p><strong>解释：</strong>我们可以看到下和右边的约束是直接相对于cell的，而其他两个约束都是相对于subtitleLabel的，为了满足我们上面讲的 <strong>self-sizing cell</strong>，我们的subtitleLabel就必须满足有相对于cell左边和上边的约束，而我们的subtitleLabel的部分约束又是相对于titleLabel的，所以titleLabel也要满足相应的约束要求，总之，最后我们自动行高的label必须满足有相对于cell上下左右的约束，才可实现行高的自动适应</p>
-<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><blockquote>
-<p>这是一个最简单的一个例子，可能我们的需求会是各种各样的情况，比如我们需要多个label自适应，水平方向有多个label，某行或者某列有多个label只有部分需要换行等等，这些就需要运用到我们的 <strong>约束优先级</strong> 相关的知识了。这一块有时间再讲吧</p>
-</blockquote>
+<p><strong>对应到我们当前公司目前的项目结构可以大概分为这么几块</strong></p>
+<ul>
+<li><strong>业务组件：</strong> 登陆模块、客服服务、支付模块等等</li>
+<li><strong>基础UI组件：</strong>通用控件(和其他一些widget)、多媒体处理、日历管理等等</li>
+<li><strong>基础功能组件：</strong>网络管理、主题管理、定位管理等等</li>
+</ul>
+<h1 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h1><ul>
+<li><strong>模块拆分，实现业务分离，可跨团队开发</strong></li>
+<li><strong>各端使用同一套基础组件来进行开发，代码整体可控</strong></li>
+<li><strong>模块和组件可组装和复用，提高开发效率</strong></li>
+<li><strong>业务隔离和代码解耦</strong></li>
+</ul>
+<h1 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h1><p><strong>1.对相关的功能模块和业务组件进行拆分，通过framework的形式发布成内部私有库</strong><br><strong>2.通过cocoapods实现对私有库的引入和版本管理</strong><br><strong>3.通过fastlane进行持续集成</strong></p>
+<h1 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h1><p><strong>1.静态库和动态库：共享代码的方式</strong><br><strong>2.CocoaPods：强大的iOS第三方库管理工具</strong><br><strong>3.FastLane：自动化持续集成工具集</strong></p>
+<p>#动态库和静态库</p>
+<h4 id="1-静态库-Static-Library"><a href="#1-静态库-Static-Library" class="headerlink" title="1.静态库 Static Library"></a>1.静态库 Static Library</h4><p>  即.a文件，项目源码所对应的目标文件(.o/.obj)的打包体；配合.h文件使用，暴露.a中的方法或成员</p>
+<p>####2.动态库 Dynamic Framework<br>即.framework文件，是一种资源打包方式，可以说是一个bundle文件夹(包含代码文件、头文件、资源文件等)</p>
+<p>####3. Library VS Framework</p>
+<ul>
+<li>静态库不能包含xib 、storyboard、图片这样的资源文件，其他开发者必须将它们复制到 app 的 main bundle 中才能使用，维护和更新非常困难</li>
+<li><p>而动态库 则可以将资源文件包含在自己的 bundle 中</p>
+</li>
+<li><p>静态库只能随应用二进制文件一起加载，链接时完整地拷贝至可执行文件中，被多次使用就有多份拷贝</p>
+</li>
+<li>而动态库链接时不复制，程序运行时由系统动态加载到内存，供程序调用，系统只加载一次，多个程序共用，节省内存。（iOS目前只允许使用系统动态库，如系统的<strong>UIKit</strong>、<strong>Foundation</strong>等）</li>
+</ul>
+<p><strong>总结一下就是</strong></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-4920b0fe4a982265.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1F301289-415F-476F-B47E-F2E072479C1A.png"></p>
+<p>我们可以看到动态库相比较静态库而言是有很多方面的优势的，然而在iOS8之前苹果是不允许我们使用动态库的，在iOS8之后苹果推出了<strong>Embedded Framework</strong>的概念，即允许我们使用动态库，我们可以在工程模板内看到<strong>Cocoa Touch Framework</strong>。苹果之所以在iOS8上推出这个东西其原因是在iOS8时苹果推出了<strong>APP Extension</strong> (程序扩展，例如我们制作通知栏的扩展程序以及允许我们使用第三方键盘等等)，这种情况下需要和我们的主APP进行部分代码共享，还有一个原因就是在iOS8时推出了<strong>Swift</strong>，由于Swift的语言特性(运行时特性尚未稳定)，所以目前只支持动态库。</p>
+<p>简单的来讲<strong>Cocoa Touch Framework</strong>有以下两个特点</p>
+<ul>
+<li>生命周期被限制在单个APP进程中</li>
+<li>不同的APP使用到时需重复加载</li>
+</ul>
+<p>所以说<strong>Cocoa Touch Framework</strong>其实是阉割版的动态库，不过这也是人之常情，毕竟苹果如果开放了真正的动态库，那还不天下大乱。</p>
+<p><strong>我们简单来看下使用组件化后预期的项目结构</strong></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-5fcb080483b0ce7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="0FCDCF7C-E25E-4DD8-83E6-AA8BF3D953E1.png"></p>
+<p>首先我们目前没有对更多的模块做拆分(后续也会拆分出来)，只是把<strong>商城</strong>这个模块拆分出来(由另一个商城的团队进行开发)，然后以<strong>Framework</strong>的形式加入到我们<strong>主APP</strong>当中。</p>
+<p>如上图所示我们可以看到我们的<strong>主APP</strong>需要引入我们的<strong>商城端</strong>，我们的<strong>商城端</strong>和<strong>主APP</strong>同时又需要依赖于我们抽出的内部组件；并且这三者都会依赖于一些<strong>第三方的Framework</strong>来进行开发。我们最终的目标就是把这些所有的东西融合在一个工程里面，也就是我们的<strong>主APP</strong>中。</p>
+<p>最终的方案就是让<strong>商城</strong>、<strong>内部组件</strong>、<strong>第三方Framework</strong>都以Framework的形式引入到我们的<strong>主APP</strong>中</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-8d22a5da8957cd6c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="567E1911-C9F9-4827-98AA-A5AC9E2E407E.png"></p>
+<p><strong>关于如何制作一个Framework网上已有很多相关的资料，可自行Google，这里就不做相应的介绍</strong></p>
+<p>那么当制作好我们的<strong>Framework</strong>后，如何让另一个工程能够使用到我们的<strong>Framework</strong>，我们最先想到的方法就是把我们的Framework直接导入到工程中，可能还需要添加相应的依赖和其他的一系列配置。那么问题就来了，首先这种方案依赖和配置非常繁琐，更重要的是当我们的<strong>Framework</strong>更新时我们需要做的是删除上一个版本然后添加新版本，然后可能还需要更新一些依赖配置等等，这种版本管理方式不仅效率低下而且还可能出现不可控的风险。幸运的是在我们的iOS开发中另一种有更好的管理依赖的方式，这就是我们的<strong>Cocoapods</strong></p>
+<h1 id="Cocoapods"><a href="#Cocoapods" class="headerlink" title="Cocoapods"></a>Cocoapods</h1><h4 id="1-什么是Cocoapods"><a href="#1-什么是Cocoapods" class="headerlink" title="1.什么是Cocoapods"></a>1.什么是Cocoapods</h4><p>简单的来说<strong>Cocoapods</strong>是我们 iOS 应用程序开发的一个第三方库依赖的管理工具(使用<strong>Ruby</strong>开发)，通过它我们可以高效率的导入、配置以及管理所用到的第三方，如果你是一个iOSCoder相信肯定对它不会陌生</p>
+<h4 id="2-特点-好处"><a href="#2-特点-好处" class="headerlink" title="2.特点/好处"></a>2.特点/好处</h4><p>简单的来说可以有以下几个方面的好处</p>
+<ul>
+<li>避免直接导入文件，方便后续版本管理</li>
+<li>简化集成流程，避免不需要的配置</li>
+<li>自动处理库之间的依赖关系</li>
+<li>简化开发者代码的发布流程</li>
+</ul>
+<h4 id="3-原理"><a href="#3-原理" class="headerlink" title="3.原理"></a>3.原理</h4><p>我们简单的来讨论下<strong>Cocoapods</strong>的功能实现原理，在讲原理之前我们首先需要了解下我们Xcode的几个大的项目工程结构</p>
+<p><strong>Target：</strong>一个target对应一个目标文件，也就是一个APP；target可以相互独立，也可以依赖于另一个target<br><strong>Project：</strong>project是构建一个或者多个APP所需的所有文件、资源和信息的存储库，可包含多个target，可以管理不同的target间的关系，我们默认创建的工程类型就是Project</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-b73ff331a47ce9a2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="3E252D48-D0B0-4635-85B4-6AC6EE82FD1B.png"></p>
+<p>如上图所示，我们的工程<strong>Project</strong>下对应了三个target，分别是我们的<strong>App</strong>和两个<strong>单元测试target</strong></p>
+<p><strong>Workspace：</strong> workspace是最大的集合，可以包含多个Xcode Project，以及要包括的任何其他文件。可以管理多个Project间的关系(引用和依赖)</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-868485871392d197.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=" "></p>
+<p>如上图所示，在这种多target的情况下可能会存在两种依赖关系<br>1.显式依赖：某个target直接引入了另一个target<br>2.隐式依赖：某个target也需要依赖于另一target，但没有直接引入</p>
+<p>我们<strong>Cocoapods</strong>的方式就是创建一个<strong>Workspace</strong>和<strong>Pods Project</strong>文件，通过<strong>Pods Project</strong>文件来管理所需要依赖的第三方的Framework，然后把我们的项目工程的Project和创建的<strong>Pods Project</strong>一起放入创建的<strong>Workspace</strong>中，最后通过这个<strong>Workspace</strong>来实现对所有工程的管理</p>
+<p>如果你的项目使用了Cocoapods，你会发现有下面几个特点：</p>
+<p>1.主工程没有显示依赖各个第三方库，Pods 项目最终会编译成一个名为 libPods.a (Pods_….framework)的文件，主项目只需要依赖这个.a文件即可</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-2604b37b5cd328d2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="5859815B-9F01-47BD-B473-EE1FAAF8BD1A.png"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-e8807c11769e695d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="FE92E691-30A4-48A0-8503-80998F74169A.png"></p>
+<p>2.对于资源文件，CocoaPods 提供了一个名为 Pods-resources.sh 的 bash 脚本，该脚本在每次项目编译的时候都会执行，将 Pods 依赖库的各种资源文件复制到目标目录中<br>3.CocoaPods 还通过一个名为 Pods.xcconfig 的文件来在编译时设置所有的依赖和参数</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-d869ffdf30915b4a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2FA89168-DFEF-46F9-871A-16AF2DA54093.png"></p>
+<p>如果什么都不干，我们的主工程肯定是不能够引用Workspace管理的第三库的。如果打开工程的<strong>Build Settings</strong>，我们可以看到<strong>Header Search Paths</strong>、<strong>Library Search Paths</strong>、<strong>Framework Search Paths</strong>等这些字段，这些字段等于告诉了我们主工程所依赖的第三方库在哪里也就是资源路径。然而知道路径只是第一步，因为我们还没有确立他们之间的引用关系，所以我们得声明一下，告诉编译器他们之间存在着引用关系，这个字段就是<strong>Other linker flags</strong>，如下图所示</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-c8064278459b67aa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="CCCA5B64-B242-438D-9DC0-EA513E807423.png"></p>
+<p>####4.如何使用<br><strong>如果你新建一个工程，在引入Cocoapods进行管理之后，你会发现工程目录下会多出这么一些文件，如下图所示</strong><br><img src="http://upload-images.jianshu.io/upload_images/1785771-e2fe246c93d18127.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="前.png"><img src="http://upload-images.jianshu.io/upload_images/1785771-7eefe596e5e9dd59.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="后.png"></p>
+<p><strong>podfile：</strong>说明文件，说明pod需要导入和管理那些依赖库<br><strong>podfile.lock：</strong>用来保存已安装的pod的依赖库的版本<br><strong>pods文件夹：</strong>Pod和依赖库的工程文件夹</p>
+<p>我们简单的来看下导入的过程，如下图所示</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1785771-7ead161d282dd546.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="导入过程"></p>
+<p>首先会根据我们的<strong>podfile</strong>中的地址找到对应的第三库所在的git仓库，如果有指定<strong>tag</strong>的话会去定位到对应的tag的提交(没有取最近的一次)，然后会去检索工程目录下的<strong>podspec文件</strong>，通过podspec文件来做一系列的验证，比如工程名，版本号等等，验证合法之后会根据podspec中的<strong>source_file</strong>字段找到需要下载的代码文件，然后配合对应的一些资源文件和配置文件一起下载下来，共同组成我们所需要的第三方库文件</p>
+<p>####5.制作podspec</p>
+<p>如上文所叙，要想让我们的工程能够支持cocoapods，我们需要制作工程对应的podspec，并将其发布到cocoapods上。<br>如何制作一个合适的podspec这里就不做叙述，可以通过下面的一些文章来进行了解</p>
+<p>1.<a href="http://www.jianshu.com/p/dddd32fa7477" target="_blank" rel="noopener">CocoaPods建立自己的Podspec</a><br>2.<a href="http://www.jianshu.com/p/e5209ac6ce6b" target="_blank" rel="noopener">发布CocoaPods组件碰到的坑与心得体会</a></p>
+<h1 id="Fastlane"><a href="#Fastlane" class="headerlink" title="Fastlane"></a>Fastlane</h1><p><a href="https://github.com/fastlane/fastlane" target="_blank" rel="noopener">Fastlane</a>是用Ruby语言编写的一套自动化工具集和框架，它可以非常快速简单的搭建一个自动化发布服务，并且支持Android，iOS，MacOS。比如在我们的iOS开发过程中，经常会经历从 编译-&gt;打包上传-&gt;填写应用更新数据-&gt;等待iTunesConnect编译-&gt;选择版本发布等这一系列过程，而Fastlane则可以帮我们自动化处理这些事情。<br><strong>具体的可参考：<a href="https://whlsxl.github.io" target="_blank" rel="noopener">小团队的自动化发布－Fastlane带来的全自动化发布</a><br>以及 <a href="http://www.jianshu.com/p/1aebb0854c78" target="_blank" rel="noopener">Fastlane实战（一）：移动开发自动化之道</a></strong></p>
+<h1 id="踩到的坑"><a href="#踩到的坑" class="headerlink" title="踩到的坑"></a>踩到的坑</h1><p>由于Swift不支持<strong>.a静态库</strong>的原因，当我们的第三方库内包含.a静态库，组件库内引用了这个第三库，然后我们在引入组件库时就会pod install报错，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> [!] The &apos;Pods-LJA_Example&apos; target has transitive dependencies that include static binaries: </span><br><span class="line">(/Users/nero/Desktop/Static_Dynamic/Componment/Example/Pods/libWeChatSDK/libWeChatSDK.a)</span><br></pre></td></tr></table></figure></p>
+<p>具体的解决方案参考这篇文章<a href="http://www.jianshu.com/p/7f6a7e1b3235" target="_blank" rel="noopener">组件化-动态库实战</a></p>
+<h1 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h1><ul>
+<li><p><strong>更细分的功能组件和模块</strong><br>我们当前只是对部分模块和功能进行了拆分，如只是把商场单独作为一个模块分离出去了，后续可能需要对相应模块和功能进行更细分的拆分</p>
+</li>
+<li><p><strong>模块间的通信，采用何种方式？</strong><br>在我们的模块和组件进行拆分过后，那么一个需要思考的问题就是这些模块和组件间的通信该如何解决，当前对这方面的讨论也比较多，具体可参考这些文章<br><a href="http://www.jianshu.com/p/afb9b52143d4" target="_blank" rel="noopener">iOS组件化思路－大神博客研读和思考</a><br><a href="http://mrpeak.cn/blog/module/" target="_blank" rel="noopener">iOS组件化方案</a><br><a href="http://www.infoq.com/cn/articles/ios-app-component-development-practice" target="_blank" rel="noopener">iOS APP组件化开发实践</a><br>我们这一块的方案还未确定，后续确定了再做相应的讨论</p>
+</li>
+<li><strong>使用jazzy为内部库添文档说明</strong><br>jazzy是<strong>Realm</strong>开源的一个使用ruby编写的插件，配合xcode7以后支持的markdown注释功能，可生成类似于苹果官方文档样式的代码文档 <a href="https://github.com/realm/jazzy" target="_blank" rel="noopener">Jazzy</a></li>
+</ul>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://yoursite.com">luowei</a>
-            </p><p>原文链接：<a href="http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/</a>
-            </p><p>发表日期：<a href="http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">January 7th 2017, 12:00:00 am</a>
-            </p><p>更新日期：<a href="http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">April 26th 2019, 5:08:22 pm</a>
+            </p><p>原文链接：<a href="http://yoursite.com/2017/08/06/组件化实践之初体验/">http://yoursite.com/2017/08/06/组件化实践之初体验/</a>
+            </p><p>发表日期：<a href="http://yoursite.com/2017/08/06/组件化实践之初体验/">August 6th 2017, 2:33:00 pm</a>
+            </p><p>更新日期：<a href="http://yoursite.com/2017/08/06/组件化实践之初体验/">April 26th 2019, 5:16:43 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -444,12 +508,17 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2017/01/08/iOS-APP-几种常见特殊(异常-错误)情景的处理/" title="iOS-APP-几种常见特殊(异常-错误)情景的处理">
-                    <div class="nextTitle">iOS-APP-几种常见特殊(异常-错误)情景的处理</div>
+                <a href="/2017/12/07/说说最近的一些面试经历/" title="说说最近的t一些面试经历">
+                    <div class="nextTitle">说说最近的t一些面试经历</div>
                 </a>
             
         </li>
         <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2017/04/02/iOS中的URL/" title="iOS中的URL">
+                    <div class="prevTitle">iOS中的URL</div>
+                </a>
             
         </li>
     </ul>
@@ -548,7 +617,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言："><span class="toc-number">1.</span> <span class="toc-text">前言：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栗子："><span class="toc-number">2.</span> <span class="toc-text">栗子：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结："><span class="toc-number">3.</span> <span class="toc-text">总结：</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前因"><span class="toc-number">1.</span> <span class="toc-text">前因</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#组件化"><span class="toc-number">2.</span> <span class="toc-text">组件化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-什么是组件-模块化"><span class="toc-number">2.0.1.</span> <span class="toc-text">1.什么是组件/模块化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#目标"><span class="toc-number">3.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方案"><span class="toc-number">4.</span> <span class="toc-text">方案</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#技术栈"><span class="toc-number">5.</span> <span class="toc-text">技术栈</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-静态库-Static-Library"><span class="toc-number">5.0.0.1.</span> <span class="toc-text">1.静态库 Static Library</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Cocoapods"><span class="toc-number">6.</span> <span class="toc-text">Cocoapods</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-什么是Cocoapods"><span class="toc-number">6.0.0.1.</span> <span class="toc-text">1.什么是Cocoapods</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-特点-好处"><span class="toc-number">6.0.0.2.</span> <span class="toc-text">2.特点/好处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-原理"><span class="toc-number">6.0.0.3.</span> <span class="toc-text">3.原理</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Fastlane"><span class="toc-number">7.</span> <span class="toc-text">Fastlane</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#踩到的坑"><span class="toc-number">8.</span> <span class="toc-text">踩到的坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#未来"><span class="toc-number">9.</span> <span class="toc-text">未来</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>

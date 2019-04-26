@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="luowei">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="luowei">
+    
+    <meta name="keywords" content="RainedAllNight‘s Blog">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Swift-Tips · RainedAllNight‘s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">RainedAllNight‘s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Swift-Tips</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">RainedAllNight‘s Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Swift-Tips
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.4k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/07/19</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="分享一些自己Swift项目中用到的tips-持续更新"><a href="#分享一些自己Swift项目中用到的tips-持续更新" class="headerlink" title="分享一些自己Swift项目中用到的tips(持续更新)"></a>分享一些自己Swift项目中用到的tips(持续更新)</h2><h3 id="1-巧用系统协议"><a href="#1-巧用系统协议" class="headerlink" title="1.巧用系统协议"></a>1.巧用系统协议</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">extension Optional where Wrapped == String &#123;</span><br><span class="line">    public var nilIfEmpty: String? &#123;</span><br><span class="line">        guard let value = self else &#123; return nil &#125;</span><br><span class="line">        return value.isEmpty ? nil : value</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>扩展了Optional协议，添加了nilIfEmpty属性，添加判断：当当前字符串为空时返回nil</strong></p>
+<p><strong>举个🌰</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">普通青年的字符判断</span><br><span class="line">        guard let mobile = self.mobileTextField.text, !mobile.isEmpty else &#123;</span><br><span class="line">            self.showErrorHUD(&quot;手机号码不能为空&quot;)</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">文艺青年的字符判断</span><br><span class="line">        guard let mobile = self.mobileTextField.text.nilIfEmpty else &#123;</span><br><span class="line">            self.showErrorHUD(&quot;手机号码不能为空&quot;)</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="再如"><a href="#再如" class="headerlink" title="再如"></a>再如</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">extension URL: ExpressibleByStringLiteral &#123;</span><br><span class="line">    public init(stringLiteral value: String) &#123;</span><br><span class="line">        guard let url = URL(string: value) else &#123;</span><br><span class="line">           preconditionFailure(&quot;url transform is failure&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">        self = url</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>通过扩展URL实现ExpressibleByStringLiteral协议，让url有了字面量赋值方式</strong></p>
+<p><strong>举个🌰</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let url = &quot;https://www.baidu.com&quot;</span><br><span class="line">let request = URLRequest(url: url)</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="2-规范Segue跳转"><a href="#2-规范Segue跳转" class="headerlink" title="2.规范Segue跳转"></a>2.规范Segue跳转</h3><p><strong>如果你的项目使用的是StoryBoard来进行开发的话肯定对Segue跳转不会陌生，但是随之而来的问题就是为了区别不同的segue而存在的identifier会以字符串的形式存在于各处，一处修改后需要所有地方同步修改，不然就会导致crash。那么有没有一种规范化的声明和调用的方式呢</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">protocol KYXSegueable &#123;</span><br><span class="line">    associatedtype CustomSegueIdentifier: RawRepresentable</span><br><span class="line">    func performCustomSegue(_ segue: CustomSegueIdentifier, sender: Any?)</span><br><span class="line">    func customSegueIdentifier(forSegue segue: UIStoryboardSegue) -&gt; CustomSegueIdentifier?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extension KYXSegueable where Self: UIViewController, CustomSegueIdentifier.RawValue == String &#123;</span><br><span class="line">    </span><br><span class="line">    func performCustomSegue(_ segue: CustomSegueIdentifier, sender: Any?) &#123;</span><br><span class="line">        performSegue(withIdentifier: segue.rawValue, sender: sender)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func customSegueIdentifier(forSegue segue: UIStoryboardSegue) -&gt; CustomSegueIdentifier? &#123;</span><br><span class="line">        guard let identifier = segue.identifier, let customSegueIndentifier = CustomSegueIdentifier(rawValue: identifier) else &#123;</span><br><span class="line">            return nil</span><br><span class="line">//            fatalError(&quot;Cannot get custom segue indetifier for segue: \(segue.identifier ?? &quot;&quot;)&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return customSegueIndentifier</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>我们定义了一个KYXSegueable的协议，关联了一个RawRepresentable类型，并定义了两个和系统类似的方法用于跳转和获取identifier，有关RawRepresentable可以进入Api看一下，遵循它的对象具有rawValue的属性和功能，我们最常见的枚举就遵循这类协议</strong></p>
+<p><strong>那么如何使用呢</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class KYXHomeViewController: KYXBaseViewController, KYXSegueable &#123;</span><br><span class="line"></span><br><span class="line">    enum CustomSegueIdentifier: String &#123;</span><br><span class="line">        case loginSegue</span><br><span class="line">        case coinListSegue</span><br><span class="line">        case vehicleListSegue</span><br><span class="line">        case dataSwitchSegue</span><br><span class="line">        case addDeviceSegue</span><br><span class="line">        case tripSegue</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  ......</span><br></pre></td></tr></table></figure>
+<p><strong>控制器实现KYXSegueable协议，并声明其所需的遵循RawRepresentable协议的关联类型，没错，就是一组枚举了，我们可以在这边定义我们跳转的segue</strong></p>
+<p><strong>调用</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.performCustomSegue(.coinListSegue, sender: nil)</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">override func prepare(for segue: UIStoryboardSegue, sender: Any?) &#123;</span><br><span class="line">      guard let segueId = CustomSegueIdentifier(rawValue: segue.identifier ?? &quot;&quot;) else &#123;</span><br><span class="line">          return</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      switch segueId &#123;</span><br><span class="line">      case .vehicleListSegue:</span><br><span class="line">          let vehicleListController = segue.destination as? KYXMyVehicleListViewController</span><br><span class="line">          vehicleListController?.originalNavBarColor = self.navigationController?.navigationBar.titleTextAttributes?[NSAttributedStringKey.foregroundColor] as? UIColor</span><br><span class="line">          </span><br><span class="line">      case .tripSegue:</span><br><span class="line">          let tripListController = segue.destination as? KYXTripListTableViewController</span><br><span class="line">          tripListController?.recentTrip = self.homeModel?.trip</span><br><span class="line">          </span><br><span class="line">      default:</span><br><span class="line">          break</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="3-更好地使用tableView-组织Section-amp-Row"><a href="#3-更好地使用tableView-组织Section-amp-Row" class="headerlink" title="3.更好地使用tableView-组织Section &amp; Row"></a>3.更好地使用tableView-组织Section &amp; Row</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">open class KYXSection: NSObject &#123;</span><br><span class="line">    open var rows: [KYXRow] = []</span><br><span class="line">    open var data: Any?</span><br><span class="line">    </span><br><span class="line">    public convenience init(rows: [KYXRow]) &#123;</span><br><span class="line">        self.init()</span><br><span class="line">        self.rows = rows</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">open class KYXRow: NSObject &#123;</span><br><span class="line">    open var cellIdentifier: String = &quot;&quot;</span><br><span class="line">    open var data: Any?</span><br><span class="line">    open var rowHeight: CGFloat = UITableViewAutomaticDimension // 返回具体行高或UITableViewAutomaticDimension</span><br><span class="line">    </span><br><span class="line">    public convenience init(_ cellIdentifier: String) &#123;</span><br><span class="line">        self.init()</span><br><span class="line">        self.cellIdentifier = cellIdentifier</span><br><span class="line">        self.rowHeight = UITableViewAutomaticDimension</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public convenience init(_ cellIdentifier: String, data: Any?) &#123;</span><br><span class="line">        self.init()</span><br><span class="line">        self.cellIdentifier = cellIdentifier</span><br><span class="line">        self.data = data</span><br><span class="line">        self.rowHeight = UITableViewAutomaticDimension</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public convenience init(cellIdentifier identifier: String, data: Any?, rowHeight: CGFloat) &#123;</span><br><span class="line">        self.init()</span><br><span class="line">        self.cellIdentifier = identifier</span><br><span class="line">        self.data = data</span><br><span class="line">        self.rowHeight = rowHeight</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>如何使用</strong></p>
+<p><strong>第一步，组织Section</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">    private func configureSections(_ homeModel: HomeModel) &#123;</span><br><span class="line">        self.sections.removeAll()</span><br><span class="line">        //热点新闻</span><br><span class="line">        if let news = homeModel.news, news.count &gt; 0 &#123;</span><br><span class="line">            let hotNewsSection = KYXSection(rows: [KYXRow(cellIdentifier: CellID.hotNews.rawValue, data: homeModel.news, rowHeight: 80)])</span><br><span class="line">            self.sections.append(hotNewsSection)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //驾驶得分</span><br><span class="line">        if let trip = homeModel.trip &#123;</span><br><span class="line">            let driveGradeSection = KYXSection()</span><br><span class="line">            var subtitle = &quot;近七天均值&quot;</span><br><span class="line">            if let trip = homeModel.trip, !trip.hasData &#123;</span><br><span class="line">                subtitle = &quot;近七天暂无行程&quot;</span><br><span class="line">            &#125;</span><br><span class="line">            let driveHaederRow = KYXRow(cellIdentifier: CellID.hader.rawValue, data: [&quot;title&quot;: &quot;驾驶评分&quot;, &quot;subtitle&quot;: subtitle], rowHeight: 38)</span><br><span class="line">            let gradeRow = KYXRow(cellIdentifier: CellID.driveGrade.rawValue, data: trip, rowHeight: 138)</span><br><span class="line">            driveGradeSection.rows.append(contentsOf: [driveHaederRow, gradeRow])</span><br><span class="line">            self.sections.append(driveGradeSection)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if let banners = homeModel.banners, banners.count &gt; 0 &#123;</span><br><span class="line">            let bannerSection = KYXSection()</span><br><span class="line">            let bannerRow = KYXRow(cellIdentifier: CellID.banner.rawValue, data: homeModel.banners, rowHeight: (self.view.bounds.width)/4)</span><br><span class="line">            bannerSection.rows.append(bannerRow)</span><br><span class="line">            self.sections.append(bannerSection)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if let ranks = homeModel.ranks, ranks.count &gt; 0 &#123;</span><br><span class="line">            let rankingSection = KYXSection()</span><br><span class="line">            let rankingHaederRow = KYXRow(cellIdentifier: CellID.hader.rawValue, data: [&quot;title&quot;: &quot;安全驾驶排名&quot;, &quot;subtitle&quot;: &quot;每周日24时结算&quot;], rowHeight: 38)</span><br><span class="line">            let rankingRow = KYXRow(cellIdentifier: CellID.rank.rawValue, data: homeModel.ranks, rowHeight: 166)</span><br><span class="line">            rankingSection.rows.append(contentsOf: [rankingHaederRow, rankingRow])</span><br><span class="line">            self.sections.append(rankingSection)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">..........</span><br></pre></td></tr></table></figure></p>
+<p><strong>TableView代理方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">func numberOfSections(in tableView: UITableView) -&gt; Int &#123;</span><br><span class="line">    return self.sections.count</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -&gt; Int &#123;</span><br><span class="line">    return self.sections[section].rows.count</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>更优雅的Cell类型判断</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell &#123;</span><br><span class="line">    let row = self.sections[indexPath.section].rows[indexPath.row]</span><br><span class="line">    let cell = tableView.dequeueReusableCell(withIdentifier: row.cellIdentifier, for: indexPath)</span><br><span class="line">    let data = row.data</span><br><span class="line">    </span><br><span class="line">    switch row.cellIdentifier &#123;</span><br><span class="line">    case CellID.banner.rawValue:</span><br><span class="line">        let bannerCell = cell as? HomeBannerTableViewCell</span><br><span class="line">        bannerCell?.configureCell(data as? [ServiceManageModel])</span><br><span class="line">        </span><br><span class="line">    case CellID.section.rawValue:</span><br><span class="line">        cell.backgroundColor = UIColor.white</span><br><span class="line">        </span><br><span class="line">    case CellID.funcList.rawValue:</span><br><span class="line">        let cell = cell as? HomeFunctionListTableViewCell</span><br><span class="line">        cell?.configureCell(services: data as? [HomeService], index: indexPath.row)</span><br><span class="line">        </span><br><span class="line">    case CellID.driveGrade.rawValue:</span><br><span class="line">        let cell = cell as? HomeDriveGradeTableViewCell</span><br><span class="line">        cell?.configureCell(model: data as? HomeTrip)</span><br><span class="line">        </span><br><span class="line">    case CellID.rank.rawValue:</span><br><span class="line">        let rankCell = cell as? HomeRankingTableViewCell</span><br><span class="line">        rankCell?.configureCell(models: data as? [HomeRank])</span><br><span class="line">        </span><br><span class="line">    case CellID.hotNews.rawValue:</span><br><span class="line">        let newsCell = cell as? HomeHotNewsTableViewCell</span><br><span class="line">        newsCell?.configureCell(models: data as? [HomeNews])</span><br><span class="line">    default:</span><br><span class="line">        return cell</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然这个方案还有优化的空间，比如将<strong>Row</strong>的<strong>cellidentifier</strong>属性用枚举来定义，判断和初始化的时候就不用操作rawValue了</p>
+<hr>
+<h3 id="4-简洁声明多个变量"><a href="#4-简洁声明多个变量" class="headerlink" title="4.简洁声明多个变量"></a>4.简洁声明多个变量</h3><p><strong>对于一些相互有关联的变量，相比于在每行中声明一个，还有一种更简洁美观的方式：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var (top, left, width, height) = (0.0, 0.0, 100.0, 50.0)</span><br><span class="line">//rect.width = width</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-Notification的管理"><a href="#5-Notification的管理" class="headerlink" title="5.Notification的管理"></a>5.Notification的管理</h3><p>类似于Segue, 也可以通过枚举来规范管理项目中的Notification</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">extension NotificationCenter &#123;</span><br><span class="line">    static func post(name: KYXNotification, object: Any?, userInfo: [AnyHashable: Any]?) &#123;</span><br><span class="line">        NotificationCenter.default.post(name: NSNotification.Name.init(name.rawValue), object: object, userInfo: userInfo)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    static func addObserver(_ observer: Any, selector: Selector, name: KYXNotification, object: Any?) &#123;</span><br><span class="line">        NotificationCenter.default.addObserver(observer, selector: selector, name: NSNotification.Name.init(name.rawValue), object: object)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">定义所需的通知名</span><br><span class="line"></span><br><span class="line">public enum KYXNotification: String &#123;</span><br><span class="line">    case loginTimeout</span><br><span class="line">    case loginSuccess</span><br><span class="line">    case logoutSuccess</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>使用</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NotificationCenter.post(name: .loginSuccess, object: nil, userInfo: nil)</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NotificationCenter.addObserver(self, selector: #selector(didLoginSuccess), name: .loginSuccess, object: nil)</span><br></pre></td></tr></table></figure>
+<p><strong>Protocol + Enum + Extension</strong>组成了Swift中的三巨头 ，灵活运用它们可以产生很多有趣的东西</p>
+<hr>
+<h3 id="未完，待续…"><a href="#未完，待续…" class="headerlink" title="未完，待续…"></a>未完，待续…</h3>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">luowei</a>
+            </p><p>原文链接：<a href="http://yoursite.com/2018/07/19/Swift-Tips/">http://yoursite.com/2018/07/19/Swift-Tips/</a>
+            </p><p>发表日期：<a href="http://yoursite.com/2018/07/19/Swift-Tips/">July 19th 2018, 12:00:00 am</a>
+            </p><p>更新日期：<a href="http://yoursite.com/2018/07/19/Swift-Tips/">April 26th 2019, 5:21:04 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) " title="使用Mac" 智能文件夹"管理你的项目文件(同类型文件)">
+                    <div class="nextTitle">使用Mac"智能文件夹"管理你的项目文件(同类型文件)</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/" title="使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层">
+                    <div class="prevTitle">使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzkzNi8yMDQ3Mg==">
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="https://github.com/rainedAllNight" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <a href="mailto:guardweielse@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="https://s2.ax1x.com/2019/04/26/EmfdF1.jpg">
+                </span>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#分享一些自己Swift项目中用到的tips-持续更新"><span class="toc-number">1.</span> <span class="toc-text">分享一些自己Swift项目中用到的tips(持续更新)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-巧用系统协议"><span class="toc-number">1.1.</span> <span class="toc-text">1.巧用系统协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#再如"><span class="toc-number">1.1.1.</span> <span class="toc-text">再如</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-规范Segue跳转"><span class="toc-number">1.2.</span> <span class="toc-text">2.规范Segue跳转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-更好地使用tableView-组织Section-amp-Row"><span class="toc-number">1.3.</span> <span class="toc-text">3.更好地使用tableView-组织Section &amp; Row</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-简洁声明多个变量"><span class="toc-number">1.4.</span> <span class="toc-text">4.简洁声明多个变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Notification的管理"><span class="toc-number">1.5.</span> <span class="toc-text">5.Notification的管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#未完，待续…"><span class="toc-number">1.6.</span> <span class="toc-text">未完，待续…</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 13
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span><a class="archive-post-title" href="/2019/04/26/First-Essay/">First Essay</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/24</span><a class="archive-post-title" href="/2019/04/24/使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境/">使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2019/03/06/iOS蓝牙开发相关知识点和注意事项/">iOS蓝牙开发相关知识点和注意事项</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href="/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) ">使用Mac"智能文件夹"管理你的项目文件(同类型文件)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href="/2018/07/19/Swift-Tips/">Swift-Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span><a class="archive-post-title" href="/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/">使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2018/03/06/简单聊聊Swift中的Protocol/">简单聊聊Swift中的Protocol</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2017/12/07/说说最近的一些面试经历/">说说最近的t一些面试经历</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href="/2017/08/06/组件化实践之初体验/">组件化初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2017/04/02/iOS中的URL/">iOS中的URL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span><a class="archive-post-title" href="/2017/02/14/几个简单的轮子/">几个简单的轮子</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href="/2017/01/08/iOS-APP-几种常见特殊(异常-错误)情景的处理/">iOS-APP-几种常见特殊(异常-错误)情景的处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href="/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">iOS-tableViewCell自适应行高的计算(8-0及以后)</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "luowei"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

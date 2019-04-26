@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>iOS-tableViewCell自适应行高的计算(8-0及以后) · RainedAllNight‘s Blog</title>
+    <title>使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层 · RainedAllNight‘s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/">RainedAllNight‘s Blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">iOS-tableViewCell自适应行高的计算(8-0及以后)</a>
+                <a href="#" class="post-name">使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            iOS-tableViewCell自适应行高的计算(8-0及以后)
+            使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层
             <!-- 404 -->
             
         </h1>
@@ -266,12 +266,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">733</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">145</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2017/01/07</span>
+                    <span class="post-intro-time">2018/05/11</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -395,47 +395,17 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><blockquote>
-<p>tableView cell 自适应在我们的日常开发中经常会用到，假如你使用的是autolayout布局并且最低支持的版本是8.0及以上，本文可能会对你有所帮助</p>
-</blockquote>
-<h3 id="栗子："><a href="#栗子：" class="headerlink" title="栗子："></a>栗子：</h3><p><img src="http://upload-images.jianshu.io/upload_images/1785771-03cdb9848a86f2e0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果"></p>
-<p> <strong>效果如图，最终实现的是第三行文字高度自适应，来看下我们的实现</strong></p>
-<ul>
-<li><strong>代码部分(swift)：</strong><pre><code>override func viewDidLoad() {
-    super.viewDidLoad()
-    self.tableview.estimatedRowHeight = 80
-    self.tableview.rowHeight = UITableViewAutomaticDimension
-// Do any additional setup after loading the view, typically from a nib.   }
-</code></pre></li>
-</ul>
-<pre><code>func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell {
-      let cell = tableView.dequeueReusableCell(withIdentifier: &quot;TestTableViewCell&quot;, for: indexPath) as! TestTableViewCell
-      var contentText = &quot;这是一段很长的文字&quot;
-      for _ in 0...arc4random()%5 {
-        contentText = contentText + &quot;这是一段很长的文字&quot;
-      }
-      cell.contentLabel.text = contentText
-      return cell                                                    }
-</code></pre><p>  <strong> 解释：</strong>iOS8以后苹果为我们提供了一个 <strong>estimatedRowHeight</strong>  和 <strong>UITableViewAutomaticDimension</strong> 属性，直译过来分别为 <strong>预期高度</strong>和<strong> tableView自动尺寸</strong>，第一段代码的意思是设置tableView的预期高度为80并且设置tableView的行高为自动计算行高后所得到的值(当然这两个属性也可以通过相应的代理方法进行设置)，cellForRow和我们以往一样。这样在约束好以后，它就会自动帮我算好行高，可以这么理解，系统会帮我们把cell的行高算好，然后自动把这个值匹配给我们相应的cell。</p>
-<p>要实现这种效果还有一个重点就是关于 <strong>约束</strong>的问题，我们的约束必须要满足 <strong>self-sizing cell</strong>，简单来说就是我们需要换行高的那个label需要有相对于cell上下左右的约束(直接的约束或者通过其他控件的间接约束)，我们来看下栗子里的约束情况</p>
-<ul>
-<li><strong>约束部分：</strong></li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1785771-b5cad0e26cf89bae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="约束"></p>
-<p>上边约束：距离subtitleLabel的底部为4<br>左边约束：图第三个约束，内容为与subtitleLabel的左边相等<br>下边约束：距离cell下边距离为 14<br>右边约束：距离cell右边距离为26</p>
-<p><strong>解释：</strong>我们可以看到下和右边的约束是直接相对于cell的，而其他两个约束都是相对于subtitleLabel的，为了满足我们上面讲的 <strong>self-sizing cell</strong>，我们的subtitleLabel就必须满足有相对于cell左边和上边的约束，而我们的subtitleLabel的部分约束又是相对于titleLabel的，所以titleLabel也要满足相应的约束要求，总之，最后我们自动行高的label必须满足有相对于cell上下左右的约束，才可实现行高的自动适应</p>
-<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><blockquote>
-<p>这是一个最简单的一个例子，可能我们的需求会是各种各样的情况，比如我们需要多个label自适应，水平方向有多个label，某行或者某列有多个label只有部分需要换行等等，这些就需要运用到我们的 <strong>约束优先级</strong> 相关的知识了。这一块有时间再讲吧</p>
-</blockquote>
+        <h1 id="RainHttpManager"><a href="#RainHttpManager" class="headerlink" title="RainHttpManager"></a><a href="https://github.com/rainedAllNight/RainHttpManager" target="_blank" rel="noopener">RainHttpManager</a></h1><h2 id="使用-Moya-ObjectMapper-Codable-SwiftyJSON-三选一-封装的网络层，可以根据项目需要选择合适的方案"><a href="#使用-Moya-ObjectMapper-Codable-SwiftyJSON-三选一-封装的网络层，可以根据项目需要选择合适的方案" class="headerlink" title="使用 Moya + ObjectMapper/Codable/SwiftyJSON (三选一)封装的网络层，可以根据项目需要选择合适的方案"></a>使用 Moya + ObjectMapper/Codable/SwiftyJSON (三选一)封装的网络层，可以根据项目需要选择合适的方案</h2><h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">    //1.json</span><br><span class="line">    RainHttpManager.requestJSON(ApiTest.fetchTestJSON, success: &#123; (response) in</span><br><span class="line">        // json response</span><br><span class="line">    &#125;) &#123; (error) in</span><br><span class="line">        self.showErrorHUD(error.message)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //2.model</span><br><span class="line">    RainHttpManager&lt;ApiTest, TestModel&gt;.requestModel(.fetchTestModel, success: &#123; (model) in</span><br><span class="line">        guard let model = model else &#123;</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        print(&quot;name: \(model.name)&quot;)</span><br><span class="line">    &#125;) &#123; (error) in</span><br><span class="line">        self.showErrorHUD(error.message)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //3.model list</span><br><span class="line">    RainHttpManager&lt;ApiTest, TestModel&gt;.requestModelList(.fetchTestModelList(pageIndex: 0, pageSize: 10), authType: .basic, success: &#123; (models) in</span><br><span class="line">        guard let models = models else &#123;</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        print(models)</span><br><span class="line">    &#125;) &#123; (error) in</span><br><span class="line">        self.showErrorHUD(error.message)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>##具体实现细节请查看源码 <a href="https://github.com/rainedAllNight/RainHttpManager" target="_blank" rel="noopener">RainHttpManager</a></p>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://yoursite.com">luowei</a>
-            </p><p>原文链接：<a href="http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/</a>
-            </p><p>发表日期：<a href="http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">January 7th 2017, 12:00:00 am</a>
-            </p><p>更新日期：<a href="http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">April 26th 2019, 5:08:22 pm</a>
+            </p><p>原文链接：<a href="http://yoursite.com/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/">http://yoursite.com/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/</a>
+            </p><p>发表日期：<a href="http://yoursite.com/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/">May 11th 2018, 12:00:00 am</a>
+            </p><p>更新日期：<a href="http://yoursite.com/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/">April 26th 2019, 5:19:40 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -444,12 +414,17 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2017/01/08/iOS-APP-几种常见特殊(异常-错误)情景的处理/" title="iOS-APP-几种常见特殊(异常-错误)情景的处理">
-                    <div class="nextTitle">iOS-APP-几种常见特殊(异常-错误)情景的处理</div>
+                <a href="/2018/07/19/Swift-Tips/" title="Swift-Tips">
+                    <div class="nextTitle">Swift-Tips</div>
                 </a>
             
         </li>
         <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/03/06/简单聊聊Swift中的Protocol/" title="简单聊聊Swift中的Protocol">
+                    <div class="prevTitle">简单聊聊Swift中的Protocol</div>
+                </a>
             
         </li>
     </ul>
@@ -548,7 +523,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言："><span class="toc-number">1.</span> <span class="toc-text">前言：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栗子："><span class="toc-number">2.</span> <span class="toc-text">栗子：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结："><span class="toc-number">3.</span> <span class="toc-text">总结：</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RainHttpManager"><span class="toc-number">1.</span> <span class="toc-text">RainHttpManager</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-Moya-ObjectMapper-Codable-SwiftyJSON-三选一-封装的网络层，可以根据项目需要选择合适的方案"><span class="toc-number">1.1.</span> <span class="toc-text">使用 Moya + ObjectMapper/Codable/SwiftyJSON (三选一)封装的网络层，可以根据项目需要选择合适的方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用"><span class="toc-number">1.2.</span> <span class="toc-text">如何使用</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>

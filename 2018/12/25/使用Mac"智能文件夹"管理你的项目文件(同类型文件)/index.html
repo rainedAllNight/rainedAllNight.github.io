@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>iOS-tableViewCell自适应行高的计算(8-0及以后) · RainedAllNight‘s Blog</title>
+    <title>使用Mac&#34;智能文件夹&#34;管理你的项目文件(同类型文件) · RainedAllNight‘s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/">RainedAllNight‘s Blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">iOS-tableViewCell自适应行高的计算(8-0及以后)</a>
+                <a href="#" class="post-name">使用Mac"智能文件夹"管理你的项目文件(同类型文件)</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            iOS-tableViewCell自适应行高的计算(8-0及以后)
+            使用Mac"智能文件夹"管理你的项目文件(同类型文件)
             <!-- 404 -->
             
         </h1>
@@ -266,12 +266,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">733</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">665</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2017/01/07</span>
+                    <span class="post-intro-time">2018/12/25</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -395,47 +395,36 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><blockquote>
-<p>tableView cell 自适应在我们的日常开发中经常会用到，假如你使用的是autolayout布局并且最低支持的版本是8.0及以上，本文可能会对你有所帮助</p>
-</blockquote>
-<h3 id="栗子："><a href="#栗子：" class="headerlink" title="栗子："></a>栗子：</h3><p><img src="http://upload-images.jianshu.io/upload_images/1785771-03cdb9848a86f2e0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果"></p>
-<p> <strong>效果如图，最终实现的是第三行文字高度自适应，来看下我们的实现</strong></p>
-<ul>
-<li><strong>代码部分(swift)：</strong><pre><code>override func viewDidLoad() {
-    super.viewDidLoad()
-    self.tableview.estimatedRowHeight = 80
-    self.tableview.rowHeight = UITableViewAutomaticDimension
-// Do any additional setup after loading the view, typically from a nib.   }
-</code></pre></li>
-</ul>
-<pre><code>func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell {
-      let cell = tableView.dequeueReusableCell(withIdentifier: &quot;TestTableViewCell&quot;, for: indexPath) as! TestTableViewCell
-      var contentText = &quot;这是一段很长的文字&quot;
-      for _ in 0...arc4random()%5 {
-        contentText = contentText + &quot;这是一段很长的文字&quot;
-      }
-      cell.contentLabel.text = contentText
-      return cell                                                    }
-</code></pre><p>  <strong> 解释：</strong>iOS8以后苹果为我们提供了一个 <strong>estimatedRowHeight</strong>  和 <strong>UITableViewAutomaticDimension</strong> 属性，直译过来分别为 <strong>预期高度</strong>和<strong> tableView自动尺寸</strong>，第一段代码的意思是设置tableView的预期高度为80并且设置tableView的行高为自动计算行高后所得到的值(当然这两个属性也可以通过相应的代理方法进行设置)，cellForRow和我们以往一样。这样在约束好以后，它就会自动帮我算好行高，可以这么理解，系统会帮我们把cell的行高算好，然后自动把这个值匹配给我们相应的cell。</p>
-<p>要实现这种效果还有一个重点就是关于 <strong>约束</strong>的问题，我们的约束必须要满足 <strong>self-sizing cell</strong>，简单来说就是我们需要换行高的那个label需要有相对于cell上下左右的约束(直接的约束或者通过其他控件的间接约束)，我们来看下栗子里的约束情况</p>
-<ul>
-<li><strong>约束部分：</strong></li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1785771-b5cad0e26cf89bae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="约束"></p>
-<p>上边约束：距离subtitleLabel的底部为4<br>左边约束：图第三个约束，内容为与subtitleLabel的左边相等<br>下边约束：距离cell下边距离为 14<br>右边约束：距离cell右边距离为26</p>
-<p><strong>解释：</strong>我们可以看到下和右边的约束是直接相对于cell的，而其他两个约束都是相对于subtitleLabel的，为了满足我们上面讲的 <strong>self-sizing cell</strong>，我们的subtitleLabel就必须满足有相对于cell左边和上边的约束，而我们的subtitleLabel的部分约束又是相对于titleLabel的，所以titleLabel也要满足相应的约束要求，总之，最后我们自动行高的label必须满足有相对于cell上下左右的约束，才可实现行高的自动适应</p>
-<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><blockquote>
-<p>这是一个最简单的一个例子，可能我们的需求会是各种各样的情况，比如我们需要多个label自适应，水平方向有多个label，某行或者某列有多个label只有部分需要换行等等，这些就需要运用到我们的 <strong>约束优先级</strong> 相关的知识了。这一块有时间再讲吧</p>
-</blockquote>
-
+        <h4 id="如何将最近打开的项目文件夹汇总到一处？如何给某种类型的文件自动归纳整理成文件夹？顺便将他们添加到Dock栏方便访问？"><a href="#如何将最近打开的项目文件夹汇总到一处？如何给某种类型的文件自动归纳整理成文件夹？顺便将他们添加到Dock栏方便访问？" class="headerlink" title="如何将最近打开的项目文件夹汇总到一处？如何给某种类型的文件自动归纳整理成文件夹？顺便将他们添加到Dock栏方便访问？"></a>如何将最近打开的项目文件夹汇总到一处？如何给某种类型的文件自动归纳整理成文件夹？顺便将他们添加到Dock栏方便访问？</h4><p><strong>相信很多童鞋都或许有过这方面的需求。昨天看到一个很有意思的方式，它通过使用Mac下的 智能文件夹(Smart Folder)，以Xcode项目这一文件类型为例，实现将所有本地的Xcode项目工程合并(原文件路径不会更改，只是相当于添加了访问路径)到一处，并添加到Dock栏。话不多说，show you the way</strong></p>
+<p><strong>1. 如图，选择 文件-新建智能文件夹</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-ca93e2950b672b4a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2018-12-24 下午4.29.16.png"></p>
+<p><strong>2. 确保操作范围为“这台Mac”，然后点击右边的加号小按钮，添加删选条件</strong><br><img src="https://upload-images.jianshu.io/upload_images/1785771-fbd1693a5a12a773.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><strong>3. 可以看到这种规则的删选条件：按什么方式排序，是什么类型的文件</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-5b4dcea23615c0a5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="常见的排序条件"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-cea5b5ec3e5e4620.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="文件类型"></p>
+<p><strong>这里我们选择按照上次打开的日期，然后会变成这样的删选条件，这里我们时间状态选择在过去1个月内</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-98e52ac82b38ed2c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><strong>4. 点击option键，注意右侧的+号会变成三点的更多省略，点击，再次添加一条附加的删选条件，这次我们选择条件选择 按名称匹配，由于我的项目都是使用了Cocoapods来进行项目管理，所以这里关键字我填入了xcworkspace，可以看到本地当前符合我的删选条件的文件都已经出现在了删选结果栏</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-f8922238d857ecef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><strong>当然你可以根据你的需求再次添加其他删选条件，我们点击右上角的存储，将位置选为桌面，并且可以选择是否讲文件夹添加到边栏</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-aa0cc44fa2f8599b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><strong>点击存储，这时候我们可以看到桌面和侧边栏同时新增了一个栗子文件夹</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-f84a30812e714e7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-ee0e1c02a946a9f5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><strong>我们将文件夹拖动到Dock栏的下侧(横向侧边栏为右侧)，点击可以看到刚才所删选的所以项目工程</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-1131e08f6b92efcf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1785771-454d35e7ee4f3c0c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><strong>这样，当我们想要访问某个项目的时候就可以在这边快速访问到了，而它的源文件路径并没有变，还是原来的路径。添加成功后我们还可以把刚才桌面生成的文件夹删除，这同时也不会影响到Dock栏的文件夹</strong></p>
+<p>####这样，通过这一波操作我们就完成了上文所说的需求。当然这只是抛砖引玉，你可以根据自己的想法，来实现更多有趣的东西，工作效率up up up。</p>
+<h2 id="圣诞节，Merry-Christmas"><a href="#圣诞节，Merry-Christmas" class="headerlink" title="圣诞节，Merry Christmas~"></a>圣诞节，Merry Christmas~</h2>
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://yoursite.com">luowei</a>
-            </p><p>原文链接：<a href="http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/</a>
-            </p><p>发表日期：<a href="http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">January 7th 2017, 12:00:00 am</a>
-            </p><p>更新日期：<a href="http://yoursite.com/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">April 26th 2019, 5:08:22 pm</a>
+            </p><p>原文链接：<a href="http://yoursite.com/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) ">http://yoursite.com/2018/12/25/使用Mac"智能文件夹"管理你的项目文件(同类型文件)/</a>
+            </p><p>发表日期：<a href="http://yoursite.com/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) ">December 25th 2018, 12:00:00 am</a>
+            </p><p>更新日期：<a href="http://yoursite.com/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) ">April 26th 2019, 5:21:56 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -444,12 +433,17 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2017/01/08/iOS-APP-几种常见特殊(异常-错误)情景的处理/" title="iOS-APP-几种常见特殊(异常-错误)情景的处理">
-                    <div class="nextTitle">iOS-APP-几种常见特殊(异常-错误)情景的处理</div>
+                <a href="/2019/03/06/iOS蓝牙开发相关知识点和注意事项/" title="iOS蓝牙开发相关知识点和注意事项">
+                    <div class="nextTitle">iOS蓝牙开发相关知识点和注意事项</div>
                 </a>
             
         </li>
         <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/07/19/Swift-Tips/" title="Swift-Tips">
+                    <div class="prevTitle">Swift-Tips</div>
+                </a>
             
         </li>
     </ul>
@@ -548,7 +542,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言："><span class="toc-number">1.</span> <span class="toc-text">前言：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栗子："><span class="toc-number">2.</span> <span class="toc-text">栗子：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结："><span class="toc-number">3.</span> <span class="toc-text">总结：</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何将最近打开的项目文件夹汇总到一处？如何给某种类型的文件自动归纳整理成文件夹？顺便将他们添加到Dock栏方便访问？"><span class="toc-number">1.</span> <span class="toc-text">如何将最近打开的项目文件夹汇总到一处？如何给某种类型的文件自动归纳整理成文件夹？顺便将他们添加到Dock栏方便访问？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#圣诞节，Merry-Christmas"><span class="toc-number"></span> <span class="toc-text">圣诞节，Merry Christmas~</span></a>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>

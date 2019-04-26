@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="luowei">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="luowei">
+    
+    <meta name="keywords" content="RainedAllNight‘s Blog">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>说说最近的t一些面试经历 · RainedAllNight‘s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">RainedAllNight‘s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">说说最近的t一些面试经历</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">RainedAllNight‘s Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            说说最近的t一些面试经历
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4.5k</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/12/07</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="距离辞职也有段时间了，也经历了不少面试。简单回顾下这段时间的面试经历吧。"><a href="#距离辞职也有段时间了，也经历了不少面试。简单回顾下这段时间的面试经历吧。" class="headerlink" title="距离辞职也有段时间了，也经历了不少面试。简单回顾下这段时间的面试经历吧。"></a>距离辞职也有段时间了，也经历了不少面试。简单回顾下这段时间的面试经历吧。</h3><p> <strong>先说说一些感想吧，首先让我想不到的是都快年底了，iOS的人还是很多。甚至有HR直接和我明说 </strong>你们iOS不缺人<strong>。MMP，我还不能说什么，因为实际情况确实是这样。市场决定价格和需求，供给关系一旦失衡，最直接的结果就是一群萝卜抢一个坑。</strong><br><img src="http://upload-images.jianshu.io/upload_images/1785771-c525416371339f4f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="转行.jpg"></p>
+<p><strong>其次，说说投简历的事。主流的几大招聘网站我都基本都投过，我自己的感觉是不同平台之间差的还蛮多的。</strong></p>
+<p><strong>拉钩：</strong><br>作为老牌互联网招聘平台，拉钩不管是从效率还是从质量上讲都是很优于其他平台的；大公司比较多，而且公司规模和环境都还不错。基本上也都算是主营互联网平台的一些公司。</p>
+<p>其次是投递反馈的效率，其实我觉得投简历这种事反馈是最重要的，如果被投递方能够尽快给出反馈(不管是合适还是不合适)，对我们来讲合适就悦面试，不合适则方便我们预估自己的投递情况和准备后续的投递。这一块拉钩做的还是蛮不错的(及时的邮件通知和APP消息推送)。</p>
+<p>当然，在拉钩上招的公司对面试者的能力要求可能相对也会更高一点，毕竟大公司还是蛮多的。招聘要求和实际要求可能会类似这种<br><img src="http://upload-images.jianshu.io/upload_images/1785771-7a66fae6b016588a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="呵呵呵呵"></p>
+<p><strong>Boss直聘：</strong><br>Boss直聘 作为一个最近一两年兴起的招聘平台(特别是今年)，号称反馈率和成功率最高的平台。我实际也用了一段时间。整体的感受还是满符合外界对它的评价的。</p>
+<p>因为这种可以说是<strong>C2C</strong>的交流方式，使得双方的沟通效率非常之高。合适就约见，不合适也会说几句话。当然也有打完招呼后没反应的。这种其实如果你的简历写得还好的话基本上很少会出现这种情况。正是这种和boss直接交流的方式，省去了不少中间环节，效率也是会高很多。</p>
+<p>说说boss的缺点吧，可能一个缺点就是公司良莠不齐。大公司也有不少，但更多的是规模不大的小公司或者说不出名的小公司。这种情况就可能需要自己擦亮眼睛看看了，或者说面试的时候看看公司环境氛围如何。之前boss出的传销事件想必都会有耳闻，影响也蛮大的。这里说一个贼骚的面试经历，有一个boss上投的简历要我去面试，到那边以后才发现公司地点是在一个小区里面。当时也是硬着头皮去面了，后来还发现公司是做的 <strong>留遗嘱</strong>之类的APP，不得不说这个脑洞确实是大，真的会有人在死之前下个APP来写遗嘱吗。。。还有公司在一层，很昏暗的情况下灯都不带开的。我还想多活几年，溜了溜了<br><img src="http://upload-images.jianshu.io/upload_images/1785771-f8b8c0acf7d02b35.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>总的来说Boss还是一个不错的平台。</p>
+<p><strong>51Job：</strong><br>哇，说到这个是真的头疼。如果你想体验什么叫绝望什么叫石沉大海的话可以试试这个。以我个人的投递经历来讲反馈率基本为0。从我第一次下这个APP的时候看到他们的UI我就没有什么好感。太low了简直。刚好在我找工作期间他们发了一个大的改版，改版之前的界面更是惨不忍睹。听说他们最近把拉钩收购了，替拉钩惋惜。。</p>
+<p>总结一下就是 <strong>不推荐</strong></p>
+<p><strong>智联招聘：</strong><br>智联的话我基本没怎么用，但据我的了解，投递效果好像没有拉钩和boss好，但应该要比51要好。所以这块就不做评价了</p>
+<p><strong>对于其他平台我也没用就不做评价，比较推荐的还是拉钩和Boss直聘</strong></p>
+<h4 id="下面到吐槽环节，谈谈一些面试经历和对面试官的感受吧"><a href="#下面到吐槽环节，谈谈一些面试经历和对面试官的感受吧" class="headerlink" title="下面到吐槽环节，谈谈一些面试经历和对面试官的感受吧"></a><strong>下面到吐槽环节，谈谈一些面试经历和对面试官的感受吧</strong></h4><p>先说好的一部分，有碰到一些真正的大牛，虽然有的问的东西不深，但是问的很全面，而且会根据你的回答去发散问一些东西。这会让他了解更好的了解你对自己了解的东西是不是真的了解（这句话可能有点绕…），其次一部分会问的比较偏基础的东西，比如数据结构，网络相关的。这对于我这个非科班出身的小菜鸟来说简直是正中我的软肋，不得不说这一块确实缺的还蛮多的。另一部分基础的东西可能就是语言相关的了；做iOS的，不管是Objective-c还是是Swift，面试能问的东西太多了。偏深一点的可能会被问到底层实现原理，浅一点的可能就功能使用和概念相关的。<br>不管问的难不难，或者说不管你回答的怎么样，至少和大牛沟通的过程是很愉悦的，大牛们的态度还是很Nice的。这个过程也会让你找到自己的薄弱点和盲点，挂了的话至少可以回去补补相关的知识，对之后的面试有很大的帮助。所在载面试被虐之后回来，我都会记录和去了解下相应的知识点。</p>
+<p>然后说一下遇到的感觉不太好的面试官，首当其冲的就是不太懂iOS的，或者说不太懂技术的。这种又会分两种情况，一种是全场他都会在听你吹，然后可能最后入职的就看谁吹得更好，这种相对来说入职可能会更简单一点；另一种则是你全程听他说的，我遇到过公司有iOS开发人员，然后不让懂iOS的来面试而是让所谓的技术总监来，诚然技术总监资历和眼界可能更高，但咱招的不是iOS吗，至少一面技术面还是以iOS相关的为主吧，至少得有个iOS的坐旁边吧。所以我有遇到讲了一大堆废话的技术总监，然后还自我感觉良好，姿态拉的很高那种，这种公司不到万不得已最好还是不要进(原谅我发发牢骚。。)；还遇到过另一种比较无语的，就是面试没说多久就让你回去的，面试挂彩了那自然不必多说，但那种聊得好好的然后突然结束的，什么后续都没有的，真的就有点莫名其妙了。可能是大牛觉得我比较菜吧，也不排除是根本不怎么想招人的那种</p>
+<p>第三种可能就是比较正常的面试官了，问的东西和人都很正常。当然正常的东西也会有一堆答不上来的。</p>
+<p><strong>其次说说一些比较深刻的面试经历</strong></p>
+<h5 id="英语流利说"><a href="#英语流利说" class="headerlink" title="英语流利说"></a><strong>英语流利说</strong></h5><p>因为之前好早有了解过这个公司，所以在拉钩上看到相关的招聘信息后就立马投了。虽然我自己不报多大的希望，但那边还是给了我面试的机会。我猜一个是年底了不好招人，还有可能就是看我写过Swift。因为这家公司是从Swift1.0就开始用的。想都不敢想还有这么时尚的公司，公司也是以技术为主导的，在这边的技术圈好像还蛮有名的。</p>
+<p>先说结果，挂在了第二次电面上，果然菜的人不配进这种公司。</p>
+<p>虽说到了三面但我连公司都没去过，他们的面试流程大概可以分为<br><strong>1.一面电话面试</strong> 同事跟你聊聊技术，主要还是聊得Swift相关的，还有项目相关的。</p>
+<p>因为一面算是答得不算太好，所有后来也收到了不合适的反馈邮件。搞笑的是后续又联系了我，所以才有了接下来的笔试二面(我可能当了次备胎。。)</p>
+<p><strong>2.笔试(即机试题)</strong>会发一段小的需求给你，要求你在两天之内以一个独立APP的形式完成需求。我挂下需求<br><figure class="highlight plain"><figcaption><span>build this like you would an actual project you're working on. It should be production-ready code that you're proud of.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">The Instacart Grocery Challenge is a quiz that all applicants must take. You should use Swift to finish this project.</span><br><span class="line">Problem</span><br><span class="line">We want to build this quiz in-house.</span><br><span class="line">The grocery challenge is simple:</span><br><span class="line">Applicant clicks Start Quiz. They have 2 minutes to finish the quiz.</span><br><span class="line">Applicant is presented with a prompt and 4 images. They need to select the image that corresponds with the prompt and press submit.</span><br><span class="line">Applicant is presented with next question, until all questions have been answered or 2 minutes is up.</span><br><span class="line">Applicant sees their final score at the end. They should have an option to retake the challenge (for testing).</span><br><span class="line">Quiz Requirements</span><br><span class="line"></span><br><span class="line">Applicant should see the prompt and 4 images.</span><br><span class="line">Applicant should see one question at a time.</span><br><span class="line">Applicant can choose an image, then hit submit to save their answer. Applicant can change their answer before hitting submit.</span><br><span class="line">Questions should be shown in random order.</span><br><span class="line">Answers should be shown in random order.</span><br><span class="line">Quiz does not need to work landscape.</span><br><span class="line">Answers to individual questions should be stored per applicant.</span><br><span class="line">Don’t use any third party code.</span><br><span class="line">Project Submit</span><br><span class="line"></span><br><span class="line">Send the full project as Attachment to the mail:  </span><br><span class="line">Note: The first url in every answer array is the correct answer for that question in the questions.json below</span><br></pre></td></tr></table></figure></p>
+<p>比较特殊的要求就是不允许使用第三方库，当然我最后还是用了，因为很忙时间真的不够用了而且还懒。<br><img src="http://upload-images.jianshu.io/upload_images/1785771-f9f121144bf23512.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="QUIZ.gif"></p>
+<p>要看代码的可以戳这里<a href="https://github.com/rainedAllNight/QUIZ-For-LiuLiShuo" target="_blank" rel="noopener">QUIZ</a></p>
+<p>机试题后的反馈还蛮好的，但是他们不按套路出牌，可能因为我备胎的身份，本来三面是直接去公司的后来改成了又加了一次电面。来面的是另一个iOS，而这次电面可以说是最尴尬的一次面试了，全程懵逼，很多应该答上来的没答出来，可能是紧张了，脑子短路了一般。</p>
+<p>这家公司感觉就差一步，还蛮可惜的。<br><img src="http://upload-images.jianshu.io/upload_images/1785771-7dd2206e9e82f309.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h5 id="优速快递"><a href="#优速快递" class="headerlink" title="优速快递"></a>优速快递</h5><p>在投递简历之前我都没怎么听说过的一家快递公司，后续查了下公司虽说比不上中通圆通顺丰之类的，但业务其实也还蛮大的。<br>公司位置算是这边乡下的地方了，很偏，公交车都不到的地方。<br>承包了一片园区，也还蛮大的。<br>面试过程分为两轮，第一轮是技术面，应该是负责iOS这一块的某个leader，因为听说他们iOS有五十多号人，当时听到惊呆我了。面试过程还算挺愉快的，基本上是按照我的简历来问的，自我感觉答得也还蛮不错的。然后了个妹子过来，起初以为是人事，聊几句才知道是产品经理和兼项目经理。关键是妹子还挺好看的<br><img src="http://upload-images.jianshu.io/upload_images/1785771-f57c9b5fd314239c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>看样子还蛮有能力的，问的东西也很有意思。比如问我如何搭建一个项目的框架，以及结合目前即将要做的产品，需要注意哪些框架方面的东西，我给她扯了一堆balabala。。听没听懂我也不知道。然后还问了产品相关的东西，让我以一个产品的角度介绍我上架公司的APP，还有就是以产品的角度讲一下未来的这个项目需要注意哪些地方。都答完以后就是聊人生理想了，什么未来职业规划啊，什么住哪啊，有没有女朋友啊(每次有人问我这个我总问他是不是要给我介绍对象，其实人家只是想打探下你未来稳不稳定)，最后还让我自夸一段 问我推销下自己，不太会自夸的人全程一半都在自黑<br>结果是也收了offer，但最后没去。地方确实太偏了。</p>
+<h5 id="途虎养车网"><a href="#途虎养车网" class="headerlink" title="途虎养车网"></a>途虎养车网</h5><p>这家我是到了才了解到公司蛮大的，听说iOS差不多也有七八个人，而且公司现在也在使用OC和Swift来做混编开发，这一点上对我的吸引力还是蛮大的。可能是没有预想到公司这么大导致心态和准备都不太充分(奉劝各位面试之前最好对要面的公司有一个大概的了解)，面试问的算是开发中蛮实际的东西，回答的也算马马虎虎。后续也是没结果了。这家算是准备不太充分吧，浪费了好机会。</p>
+<h5 id="数禾科技"><a href="#数禾科技" class="headerlink" title="数禾科技"></a>数禾科技</h5><p>这家公司是最后面的一家，因为当时差不多已经决定好去哪家公司。这家只是刚好那天去医院顺路，然后看公司还蛮不错的，就想着去试试。然后结果也是很意料的收到了offer。<br>这家的话公司技术这一块应该还蛮吊的，因为从面试我的两个面试官中也能感觉到，主要是那种气场在。第一位面试官可能问的更多是iOS相关的一些东西，第二位更侧重问下你的软实力。这种两个面试官分维度来面试之前也遇到过，感觉这种方式还是蛮好的。<br>结果就是虽然待遇方面差不多，可能工作压力会比要去的那家大不少，公司平台非常好，感觉进去也能学到不少东西。</p>
+<p><strong>以上都算是面的比较大的公司了，当然还要一部分已经没什么印象了</strong></p>
+<p>当然也有一些中小型的公司，这些公司面试情况参差不齐。当然小公司也可能会有技术大牛等着你，我就被这种虐过，总结还是一句话，自己太菜了。后续也算是收到了几份这种offer，大都因为待遇和公司的原因没有去。<br>总结一下：小公司面试结果 = 百分之60实力 + 百分之30运气 + 百分之10不知道什么鬼</p>
+<h4 id="关于面试的一些小建议"><a href="#关于面试的一些小建议" class="headerlink" title="关于面试的一些小建议"></a>关于面试的一些小建议</h4><ul>
+<li>不要紧张，交流氛围尽量轻松化，这也有助于你对面试官问题的思考</li>
+<li>面试完要做总结，特别是被虐的一些东西，回来要查缺补漏</li>
+<li>自信点，姿态也不要放的太低，至少得是一个平等的沟通</li>
+<li>能不背包尽量不要背包，我也不知道是为什么，可能我的包有毒</li>
+<li>如果你是用iPhone并且系统是iOS11，建议还是带个移动电源出门吧</li>
+<li>对于不会的问题可以向面试官展示你的思考过程，很多面试官也比较看重这一点，真的不了解的话可以坦诚点直接说不会。</li>
+<li>预防一些面试官抛来的坑，比如说问你工作中遇到过什么问题，别说没有，可以和他说说自己真的了解的一些问题和相关的解决方案，至于这个问题真正是谁遇到的反正面试官也不会知道(手动滑稽)</li>
+<li>提前看看需要预防哪些人事方面的坑，各大招聘网站应该都会有相关的文章。</li>
+<li>心态，摆正心态，要有面试虐我千百遍 我还待她如初恋的心态。</li>
+<li>不要海投，一个是去到一些不太好的公司面试会浪费时间，二个你对自己的投递进度没有把握，面试邀请也有可能会扎堆反馈导致时间冲突。最好的方式还是看中自己中意的然后薪资能力相匹配的公司，一天投那么十几家。</li>
+<li>简历写好点，内容和样式都不要写的太差，格式最好是PDF；这里我用的是这个平台的模板 <a href="https://www.baidu.com/link?url=zuMXtwfFG_KKgfDXfR4ltpBT3ketILwzhc9fupEpzmQq-qwsWgX3PIQBNQqwro6_&amp;wd=&amp;eqid=85a8c62d00044714000000045a28d031" target="_blank" rel="noopener">知页</a>；还有就是有博客或者GitHub的话可以考虑放在简历上，感觉这个还是挺重要的，或者说效果蛮好的。</li>
+<li>最主要的一点，一定要有准备。iOS早过了那个裸考的年代，准备充分和碰运气的结果真的差的还蛮多的</li>
+</ul>
+<h4 id="分享一些总面试题相关的吧，有一部分之前误删了，没找到。"><a href="#分享一些总面试题相关的吧，有一部分之前误删了，没找到。" class="headerlink" title="分享一些总面试题相关的吧，有一部分之前误删了，没找到。"></a><strong>分享一些总面试题相关的吧，有一部分之前误删了，没找到。</strong></h4><h5 id="1-Runtime"><a href="#1-Runtime" class="headerlink" title="1.Runtime"></a>1.Runtime</h5><ul>
+<li><a href="http://www.jianshu.com/p/adf0d566c887" target="_blank" rel="noopener">iOS运行时(Runtime)详解+Demo</a></li>
+<li><a href="http://plainboiledwaterln.cn/iOSNET/runtime.html" target="_blank" rel="noopener">iOS 模块详解—「Runtime 面试、工作」看我就  了 ^_^</a></li>
+<li><a href="http://www.jianshu.com/p/e071206103a4" target="_blank" rel="noopener">让你快速上手Runtime</a></li>
+</ul>
+<h5 id="2-事件的传递和响应"><a href="#2-事件的传递和响应" class="headerlink" title="2.事件的传递和响应"></a>2.事件的传递和响应</h5><ul>
+<li><a href="http://www.jianshu.com/p/2e074db792ba" target="_blank" rel="noopener">史上最详细的iOS之事件的传递和响应机制-原理篇</a></li>
+</ul>
+<h5 id="3-RunLoop"><a href="#3-RunLoop" class="headerlink" title="3.RunLoop"></a>3.RunLoop</h5><ul>
+<li><a href="https://blog.ibireme.com/2015/05/18/runloop/" target="_blank" rel="noopener">深入理解RunLoop</a></li>
+</ul>
+<h5 id="4-多线程"><a href="#4-多线程" class="headerlink" title="4.多线程"></a>4.多线程</h5><ul>
+<li><a href="https://segmentfault.com/a/1190000006612189" target="_blank" rel="noopener">iOS多线程总结</a></li>
+<li><a href="http://www.jianshu.com/p/cee8d30937c0" target="_blank" rel="noopener">GCD简叙</a></li>
+</ul>
+<h5 id="5-相关面试题文章"><a href="#5-相关面试题文章" class="headerlink" title="5.相关面试题文章"></a>5.相关面试题文章</h5><ul>
+<li><a href="http://www.jianshu.com/p/ee15c1cf9c16" target="_blank" rel="noopener">让BAT的Offer不再难拿</a></li>
+<li><a href="https://github.com/ChenYilong/iOSInterviewQuestions" target="_blank" rel="noopener">招聘一个靠谱的 iOS</a></li>
+<li><a href="http://www.jianshu.com/p/56e40ea56813" target="_blank" rel="noopener">2017年5月iOS招人心得</a></li>
+</ul>
+<h5 id="6-网络通信相关概念"><a href="#6-网络通信相关概念" class="headerlink" title="6.网络通信相关概念"></a>6.网络通信相关概念</h5><ul>
+<li><a href="http://www.cnblogs.com/dongliu/p/5455331.html" target="_blank" rel="noopener">iOS http tcp socket</a></li>
+</ul>
+<h5 id="其他知识点"><a href="#其他知识点" class="headerlink" title="其他知识点"></a>其他知识点</h5><ul>
+<li><a href="http://www.jianshu.com/p/f3c1b920e8eb" target="_blank" rel="noopener">堆栈1</a> <a href="http://www.jianshu.com/p/f3c1b920e8eb" target="_blank" rel="noopener">堆栈2</a></li>
+<li><a href="http://blog.csdn.net/leemin_ios/article/details/51208642" target="_blank" rel="noopener">#import @import</a></li>
+<li><a href="http://www.jianshu.com/p/1e1a6f9c26f8" target="_blank" rel="noopener">深浅拷贝</a></li>
+<li><a href="http://www.jianshu.com/p/7dea5b081d24" target="_blank" rel="noopener">SDWebImage的缓存机制</a></li>
+<li><a href="http://www.jianshu.com/p/85c98a9e93eb" target="_blank" rel="noopener">UIViewController生命周期1</a> </li>
+<li><a href="http://www.jianshu.com/p/45664ff9bac7" target="_blank" rel="noopener">UIViewController生命周期2</a></li>
+<li><a href="http://www.jianshu.com/p/032bfc949917" target="_blank" rel="noopener">iOS APNS推送原理</a></li>
+<li><a href="http://www.jianshu.com/p/003b85fd3e36" target="_blank" rel="noopener">MD5、Base64、DES、AES、RSA 加解密相关</a></li>
+<li><a href="https://www.douban.com/note/180488791/" target="_blank" rel="noopener">Http Post和Get</a></li>
+<li><a href="http://blog.csdn.net/eric_sunah/article/details/37510033" target="_blank" rel="noopener">网关、路由、DNS</a> / <a href="http://blog.csdn.net/fxqcn/article/details/6610182" target="_blank" rel="noopener">2</a></li>
+<li><a href="http://www.jianshu.com/p/079e5cf0f014" target="_blank" rel="noopener">UIView和CALayer</a></li>
+</ul>
+<p>还有一部分后续有时间会慢慢补充</p>
+<h5 id="总之，iOS现在的这个行情注定找工作不会很轻松，当然有能力的人换工作永远不会很难。我…"><a href="#总之，iOS现在的这个行情注定找工作不会很轻松，当然有能力的人换工作永远不会很难。我…" class="headerlink" title="总之，iOS现在的这个行情注定找工作不会很轻松，当然有能力的人换工作永远不会很难。我…"></a>总之，iOS现在的这个行情注定找工作不会很轻松，当然有能力的人换工作永远不会很难。我…</h5><p><img src="http://upload-images.jianshu.io/upload_images/1785771-fa209fc7d7a125c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="没技术.png"></p>
+<h5 id="还有就是年底了，相对来说进比较好的公司也会比较容易一些。但更建议的还是先占好年底这波坑，想跑路的拿了年终奖来年再溜也不迟"><a href="#还有就是年底了，相对来说进比较好的公司也会比较容易一些。但更建议的还是先占好年底这波坑，想跑路的拿了年终奖来年再溜也不迟" class="headerlink" title="还有就是年底了，相对来说进比较好的公司也会比较容易一些。但更建议的还是先占好年底这波坑，想跑路的拿了年终奖来年再溜也不迟"></a>还有就是年底了，相对来说进比较好的公司也会比较容易一些。但更建议的还是先占好年底这波坑，想跑路的拿了年终奖来年再溜也不迟</h5><p><img src="http://upload-images.jianshu.io/upload_images/1785771-9f5fa1c16529e041.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1.png"></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">luowei</a>
+            </p><p>原文链接：<a href="http://yoursite.com/2017/12/07/说说最近的一些面试经历/">http://yoursite.com/2017/12/07/说说最近的一些面试经历/</a>
+            </p><p>发表日期：<a href="http://yoursite.com/2017/12/07/说说最近的一些面试经历/">December 7th 2017, 12:00:00 am</a>
+            </p><p>更新日期：<a href="http://yoursite.com/2017/12/07/说说最近的一些面试经历/">April 26th 2019, 5:17:59 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/03/06/简单聊聊Swift中的Protocol/" title="简单聊聊Swift中的Protocol">
+                    <div class="nextTitle">简单聊聊Swift中的Protocol</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2017/08/06/组件化实践之初体验/" title="组件化初体验">
+                    <div class="prevTitle">组件化初体验</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzkzNi8yMDQ3Mg==">
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="https://github.com/rainedAllNight" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <a href="mailto:guardweielse@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="https://s2.ax1x.com/2019/04/26/EmfdF1.jpg">
+                </span>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#距离辞职也有段时间了，也经历了不少面试。简单回顾下这段时间的面试经历吧。"><span class="toc-number">1.</span> <span class="toc-text">距离辞职也有段时间了，也经历了不少面试。简单回顾下这段时间的面试经历吧。</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#下面到吐槽环节，谈谈一些面试经历和对面试官的感受吧"><span class="toc-number">1.1.</span> <span class="toc-text">下面到吐槽环节，谈谈一些面试经历和对面试官的感受吧</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#英语流利说"><span class="toc-number">1.1.1.</span> <span class="toc-text">英语流利说</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#优速快递"><span class="toc-number">1.1.2.</span> <span class="toc-text">优速快递</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#途虎养车网"><span class="toc-number">1.1.3.</span> <span class="toc-text">途虎养车网</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#数禾科技"><span class="toc-number">1.1.4.</span> <span class="toc-text">数禾科技</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关于面试的一些小建议"><span class="toc-number">1.2.</span> <span class="toc-text">关于面试的一些小建议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分享一些总面试题相关的吧，有一部分之前误删了，没找到。"><span class="toc-number">1.3.</span> <span class="toc-text">分享一些总面试题相关的吧，有一部分之前误删了，没找到。</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-Runtime"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.Runtime</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-事件的传递和响应"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.事件的传递和响应</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-RunLoop"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.RunLoop</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-多线程"><span class="toc-number">1.3.4.</span> <span class="toc-text">4.多线程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-相关面试题文章"><span class="toc-number">1.3.5.</span> <span class="toc-text">5.相关面试题文章</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-网络通信相关概念"><span class="toc-number">1.3.6.</span> <span class="toc-text">6.网络通信相关概念</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#其他知识点"><span class="toc-number">1.3.7.</span> <span class="toc-text">其他知识点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#总之，iOS现在的这个行情注定找工作不会很轻松，当然有能力的人换工作永远不会很难。我…"><span class="toc-number">1.3.8.</span> <span class="toc-text">总之，iOS现在的这个行情注定找工作不会很轻松，当然有能力的人换工作永远不会很难。我…</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#还有就是年底了，相对来说进比较好的公司也会比较容易一些。但更建议的还是先占好年底这波坑，想跑路的拿了年终奖来年再溜也不迟"><span class="toc-number">1.3.9.</span> <span class="toc-text">还有就是年底了，相对来说进比较好的公司也会比较容易一些。但更建议的还是先占好年底这波坑，想跑路的拿了年终奖来年再溜也不迟</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 13
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span><a class="archive-post-title" href="/2019/04/26/First-Essay/">First Essay</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/24</span><a class="archive-post-title" href="/2019/04/24/使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境/">使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2019/03/06/iOS蓝牙开发相关知识点和注意事项/">iOS蓝牙开发相关知识点和注意事项</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href="/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) ">使用Mac"智能文件夹"管理你的项目文件(同类型文件)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href="/2018/07/19/Swift-Tips/">Swift-Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span><a class="archive-post-title" href="/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/">使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2018/03/06/简单聊聊Swift中的Protocol/">简单聊聊Swift中的Protocol</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2017/12/07/说说最近的一些面试经历/">说说最近的t一些面试经历</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href="/2017/08/06/组件化实践之初体验/">组件化初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2017/04/02/iOS中的URL/">iOS中的URL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span><a class="archive-post-title" href="/2017/02/14/几个简单的轮子/">几个简单的轮子</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href="/2017/01/08/iOS-APP-几种常见特殊(异常-错误)情景的处理/">iOS-APP-几种常见特殊(异常-错误)情景的处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href="/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">iOS-tableViewCell自适应行高的计算(8-0及以后)</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "luowei"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

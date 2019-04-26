@@ -370,27 +370,244 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href="/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">
+        <a class="abstract-title" href="/2019/04/24/使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境/">
             
-                <span>iOS-tableViewCell自适应行高的计算(8-0及以后)</span>
+                <span>使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境</span>
         </a>
         <div class="abstract-content">
-            前言：
-tableView cell 自适应在我们的日常开发中经常会用到，假如你使用的是autolayout布局并且最低支持的版本是8.0及以上，本文可能会对你有所帮助
-
-栗子：
- 效果如图，最终实现的是第三行文字高度自适应，来看下我们的实现
-
-代码部分(swift)：override func viewDidLoad() {
-    super.viewDidLoad()
-    self.tableview.estimatedRowHeight = 80
-    self.tableview.rowHeight = UITableViewAutomaticDimension
-// D...
+            切换项目环境是日常操作之一，如何做到优雅而自动化一直是一个问题，以我们项目为例，以往的方式是通过宏定义的方式，切换时手动切换变量，然后这种做法既不优雅又容易因为手动的原因出现一些问题，比如线上debug(手动狗头)这种操作。当然还有其他的一些方案比如多Tagrget + 宏定义，这种做法的问题是添加文件时需要包含进多个target，不然就会报错，除了资源文件一些代码文件比如Catagory如果没有添加编译期不能发现但到运行时就会Crash。本文介绍一种方式，使用多Configurations + Scheme+User-defined setting来配置和管理项目环境。
+先来介绍一下这...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/07</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/24</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2019/03/06/iOS蓝牙开发相关知识点和注意事项/">
+            
+                <span>iOS蓝牙开发相关知识点和注意事项</span>
+        </a>
+        <div class="abstract-content">
+            总结一下蓝牙开发相关的知识点和注意事项，做个笔记，也希望你们能少踩坑
+(公司部分蓝牙项目为混编项目，蓝牙相关处理均采用了Objective-C，故本文🌰均采用OC，Swift处理相同)
+
+###蓝牙4.0BLE和传统蓝牙蓝牙4.0包含两个蓝牙标准，它是一个是双模的标准，它包含传统蓝牙部分(也称经典蓝牙)和低功耗蓝牙部分(BLE), 二者适用于不同的应用场景和应用条件。他们的特点如下
+
+传统蓝牙： 传统蓝牙可以用与数据量比较大的传输，如语音，音乐，较高数据量传输等
+低功耗蓝牙： 低功耗蓝牙这样应用于实时性要求比较高，但是数据速率比较低的产品，如遥控类的，如鼠标，键盘，遥控鼠标(Air M...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/06</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) ">
+            
+                <span>使用Mac&#34;智能文件夹&#34;管理你的项目文件(同类型文件)</span>
+        </a>
+        <div class="abstract-content">
+            如何将最近打开的项目文件夹汇总到一处？如何给某种类型的文件自动归纳整理成文件夹？顺便将他们添加到Dock栏方便访问？相信很多童鞋都或许有过这方面的需求。昨天看到一个很有意思的方式，它通过使用Mac下的 智能文件夹(Smart Folder)，以Xcode项目这一文件类型为例，实现将所有本地的Xcode项目工程合并(原文件路径不会更改，只是相当于添加了访问路径)到一处，并添加到Dock栏。话不多说，show you the way
+1. 如图，选择 文件-新建智能文件夹
+
+2. 确保操作范围为“这台Mac”，然后点击右边的加号小按钮，添加删选条件
+3. 可以看到这种规则的删选条件：按什么方...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/25</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/07/19/Swift-Tips/">
+            
+                <span>Swift-Tips</span>
+        </a>
+        <div class="abstract-content">
+            分享一些自己Swift项目中用到的tips(持续更新)1.巧用系统协议123456extension Optional where Wrapped == String &#123;    public var nilIfEmpty: String? &#123;        guard let value = self else &#123; return nil &#125;        return value.isEmpty ? nil : value    &#125;&#125;
+扩展了Optional协议，添加了nilIfEmpty属性，添加判断：当当前字符串为空时返回n...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/19</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/">
+            
+                <span>使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层</span>
+        </a>
+        <div class="abstract-content">
+            RainHttpManager使用 Moya + ObjectMapper/Codable/SwiftyJSON (三选一)封装的网络层，可以根据项目需要选择合适的方案如何使用123456789101112131415161718192021222324252627    //1.json    RainHttpManager.requestJSON(ApiTest.fetchTestJSON, success: &#123; (response) in        // json response    &#125;) &#123; (error) in        self.sh...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/11</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/03/06/简单聊聊Swift中的Protocol/">
+            
+                <span>简单聊聊Swift中的Protocol</span>
+        </a>
+        <div class="abstract-content">
+            Swift中的Protocol众所周知，Swift是一门面向协议编程(Protocol Oriented Programming 以下简称POP)的语言，其中许多标准库均是基于此来实现的。由于以往使用面向对象的语言的惯性，以至于实际开发中并没有养成面向协议编程的思维习惯。本文将简单来聊聊Swift中的Protocol，以及我们为什么要面向protocol编程，以加深对其的印象和了解。
+Swift协议的基本功能####协议方法协议可以要求遵循协议的类型实现某些指定的实例方法或类方法。不支持为协议中的方法的参数提供默认值。功能和Objective-C中基本一致
+12345678protoco...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/06</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2017/12/07/说说最近的一些面试经历/">
+            
+                <span>说说最近的t一些面试经历</span>
+        </a>
+        <div class="abstract-content">
+            距离辞职也有段时间了，也经历了不少面试。简单回顾下这段时间的面试经历吧。 先说说一些感想吧，首先让我想不到的是都快年底了，iOS的人还是很多。甚至有HR直接和我明说 你们iOS不缺人。MMP，我还不能说什么，因为实际情况确实是这样。市场决定价格和需求，供给关系一旦失衡，最直接的结果就是一群萝卜抢一个坑。
+其次，说说投简历的事。主流的几大招聘网站我都基本都投过，我自己的感觉是不同平台之间差的还蛮多的。
+拉钩：作为老牌互联网招聘平台，拉钩不管是从效率还是从质量上讲都是很优于其他平台的；大公司比较多，而且公司规模和环境都还不错。基本上也都算是主营互联网平台的一些公司。
+其次是投递反馈的效率，其...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/07</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2017/08/06/组件化实践之初体验/">
+            
+                <span>组件化初体验</span>
+        </a>
+        <div class="abstract-content">
+            前因
+随着公司业务的发展和细化拆分，各业务端需自主开发，某些业务存在内嵌逻辑
+公司当前各端的项目存在重复的功能块和逻辑块
+业务发展的同时开发团队也在扩展，那么如何处理团队和项目发展带来的一些问题
+
+一番调研之后，我们决定使用组件化来解决当前遇到的这些问题
+组件化1.什么是组件/模块化简单的来讲可以包括下面这两块
+
+独立的业务或功能块(细分来讲)
+多个功能和业务组成的模块(可以称之为大颗粒度的组件)
+
+对应到我们当前公司目前的项目结构可以大概分为这么几块
+
+业务组件： 登陆模块、客服服务、支付模块等等
+基础UI组件：通用控件(和其他一些widget)、多媒体处理、日历管理等等
+基础功能组件...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/06</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2017/04/02/iOS中的URL/">
+            
+                <span>iOS中的URL</span>
+        </a>
+        <div class="abstract-content">
+            1. 网络通信中的URL我们使用这种url来向服务器请求或传递数据，俗称 “网络资源定位符”
+URL的结构
+
+protocol/scheme：  传输协议，比如http、https等
+
+credentials(可选)：一些http服务器支持通过url来校验用户信息，当然这是一种不普遍也不安全的方式
+
+hostName：资源服务器的主机地址
+
+port(可选)：端口号，指定客户端应该连接哪个端口，如果忽略则使用默认端口。有时候出于安全或其他考虑，可以在服务器上对端口进行重定义，即采用非标准端口号，此时，URL中就不能省略端口号这一项
+
+path：绝对路径，由零或多个“/”符号隔开的字符串，...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/02</span>
             </div>
             <!-- tags  -->
             
@@ -398,6 +615,10 @@ tableView cell 自适应在我们的日常开发中经常会用到，假如你�
     </article>
     
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &#62;</a>
+    </nav>
     
 </main>
             <!-- profile -->
@@ -478,9 +699,150 @@ tableView cell 自适应在我们的日常开发中经常会用到，假如你�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 2
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -500,6 +862,45 @@ tableView cell 自适应在我们的日常开发中经常会用到，假如你�
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/24</span><a class="archive-post-title" href="/2019/04/24/使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境/">使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2019/03/06/iOS蓝牙开发相关知识点和注意事项/">iOS蓝牙开发相关知识点和注意事项</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href="/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) ">使用Mac"智能文件夹"管理你的项目文件(同类型文件)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href="/2018/07/19/Swift-Tips/">Swift-Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span><a class="archive-post-title" href="/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/">使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2018/03/06/简单聊聊Swift中的Protocol/">简单聊聊Swift中的Protocol</a>
+        </li>
+    
+    
     
     
     
@@ -507,6 +908,31 @@ tableView cell 自适应在我们的日常开发中经常会用到，假如你�
     
     <div class="archive-year"> 2017 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2017/12/07/说说最近的一些面试经历/">说说最近的t一些面试经历</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href="/2017/08/06/组件化实践之初体验/">组件化初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2017/04/02/iOS中的URL/">iOS中的URL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span><a class="archive-post-title" href="/2017/02/14/几个简单的轮子/">几个简单的轮子</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href="/2017/01/08/iOS-APP-几种常见特殊(异常-错误)情景的处理/">iOS-APP-几种常见特殊(异常-错误)情景的处理</a>
+        </li>
     
     
         <li class="archive-post-item">
