@@ -346,6 +346,39 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2020/07/10/Summary-圆角切割/">
+            
+                <span>Summary-圆角切割</span>
+        </a>
+        <div class="abstract-content">
+            #圆角切割离屏渲染
+UIImageView
+iOS9之后设置layer. cornerRadius和masksToBounds不会再产生离屏渲染
+但是加上了背景色、边框阴影或其他有图像内容的图层，还是会产生离屏渲染
+
+设置圆角1testImageView.layer.cornerRadius = 10
+UIView&amp;UIButton&amp;UILabel只设置 layer.cornerRadius
+不会产生
+
+设置 layer.cornerRadius + layer.masksToBounds(对应view的clipsToBounds属性)
+无文本内容背景图片阴影等图层(或子...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/10</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2019/04/24/使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境/">
             
                 <span>使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境</span>
@@ -590,54 +623,6 @@ path：绝对路径，由零或多个“/”符号隔开的字符串，...
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2017/02/14/几个简单的轮子/">
-            
-                <span>几个简单的轮子</span>
-        </a>
-        <div class="abstract-content">
-            写了几个简单的轮子，持续更新…
-登陆倒计时按钮
-
-
-Github:RNCountdownButton
-
-带placehodler的textView
-
-
-Github:RNPlacehodlerTextView
-
-##类似淘宝的商品详情(下拉进入web详情，上拉回到商品详情)
-
-
-Github：GoodDetail
-
-##一个小巧精致的轮播，使用collectionView实现(支持自定义)
-
-
-
-GitHub:RNImageViewPlayer
-
-##一个还不错的分页菜单
-
-GitHub:RNScrollPageView
-###如果你感觉还不错，欢迎在Github上Star一下,假如在使...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/14</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
@@ -833,9 +818,38 @@ GitHub:RNScrollPageView
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -845,6 +859,20 @@ GitHub:RNScrollPageView
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href="/2020/07/10/Summary-圆角切割/">Summary-圆角切割</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
