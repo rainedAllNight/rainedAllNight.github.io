@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="luowei">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="luowei">
+    
+    <meta name="keywords" content="RainedAllNight‘s Blog">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>源码简析-Moya · RainedAllNight‘s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">RainedAllNight‘s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">源码简析-Moya</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">RainedAllNight‘s Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            源码简析-Moya
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/07/20</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="源码简析-Moya"><a href="#源码简析-Moya" class="headerlink" title="源码简析-Moya"></a>源码简析-Moya</h1><p><img src="/Users/rainedAllNight/Desktop/Moya源码赏析/截屏2020-07-16 下午4.44.12.png" alt="Moya-version:14.0"></p>
+<p>如图是<a href="https://github.com/Moya/Moya/releases/tag/14.0.0" target="_blank" rel="noopener">Moya/14.0</a>版本的项目结构，在14.0之前Moya使用了自定义的Result包，此版本改为使用了原生的Result包，除此之外还引用了<a href="https://github.com/Alamofire/Alamofire" target="_blank" rel="noopener">Alamofire</a>这个网络请求库，这篇文章我们将聚焦于Moya本身，简单分析分析Moay的项目源码。</p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">provider = MoyaProvider&lt;GitHub&gt;()</span><br><span class="line">provider.request(.zen) &#123; result in</span><br><span class="line">    switch result &#123;</span><br><span class="line">    case let .success(moyaResponse):</span><br><span class="line">        let data = moyaResponse.data</span><br><span class="line">        let statusCode = moyaResponse.statusCode</span><br><span class="line">        // do something with the response data or statusCode</span><br><span class="line">    case let .failure(error):</span><br><span class="line">        // this means there was a network failure - either the request</span><br><span class="line">        // wasn&apos;t sent (connectivity), or no response was received (server</span><br><span class="line">        // timed out).  If the server responds with a 4xx or 5xx error, that</span><br><span class="line">        // will be sent as a &quot;.success&quot;-ful response.</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个简单的请求如上，它由一个<strong>provider</strong>发起，入参为<strong>GitHub.zen</strong>一个遵守了<strong>TargetType</strong>协议的枚举。以这两条线开始，我们回到项目源码展开分析。</p>
+<h2 id="Target-amp-Task"><a href="#Target-amp-Task" class="headerlink" title="Target&amp;Task"></a>Target&amp;Task</h2><h3 id="TargetType"><a href="#TargetType" class="headerlink" title="TargetType"></a>TargetType</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public protocol TargetType &#123;</span><br><span class="line"></span><br><span class="line">    /// The target&apos;s base `URL`.</span><br><span class="line">    var baseURL: URL &#123; get &#125;</span><br><span class="line"></span><br><span class="line">    /// The path to be appended to `baseURL` to form the full `URL`.</span><br><span class="line">    var path: String &#123; get &#125;</span><br><span class="line"></span><br><span class="line">    /// The HTTP method used in the request.</span><br><span class="line">    var method: Moya.Method &#123; get &#125;</span><br><span class="line"></span><br><span class="line">    /// Provides stub data for use in testing.</span><br><span class="line">    var sampleData: Data &#123; get &#125;</span><br><span class="line"></span><br><span class="line">    /// The type of HTTP task to be performed.</span><br><span class="line">    var task: Task &#123; get &#125;</span><br><span class="line"></span><br><span class="line">    /// The type of validation to perform on the request. Default is `.none`.</span><br><span class="line">    var validationType: ValidationType &#123; get &#125;</span><br><span class="line"></span><br><span class="line">    /// The headers to be used in the request.</span><br><span class="line">    var headers: [String: String]? &#123; get &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>TargetType</strong>定义了<strong>MoyaProvider</strong>所必要的一些字段，也就是一个请求的基本入参。<br>完美提现了<strong>依赖倒置原则</strong>，后续的使用有点依赖注入的内味儿</p>
+<h3 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h3><p>顾名思义即任务，Task定义了请求数据的传输方式以及编码方式，比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/// A requests body set with encoded parameters.</span><br><span class="line">    case requestParameters(parameters: [String: Any], encoding: ParameterEncoding) </span><br><span class="line">    </span><br><span class="line">/// A &quot;multipart/form-data&quot; upload task.</span><br><span class="line">    case uploadMultipart([MultipartFormData])</span><br><span class="line">    </span><br><span class="line">/// A file download task to a destination.</span><br><span class="line">    case downloadDestination(DownloadDestination)</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="MoyaProvider"><a href="#MoyaProvider" class="headerlink" title="MoyaProvider"></a>MoyaProvider</h2><p>一个请求的发起者<strong>provider</strong>，是一个遵守了<strong>MoyaProviderType</strong>协议的类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public protocol MoyaProviderType: AnyObject &#123;</span><br><span class="line"></span><br><span class="line">    associatedtype Target: TargetType</span><br><span class="line"></span><br><span class="line">    /// Designated request-making method. Returns a `Cancellable` token to cancel the request later.</span><br><span class="line">    func request(_ target: Target, callbackQueue: DispatchQueue?, progress: Moya.ProgressBlock?, completion: @escaping Moya.Completion) -&gt; Cancellable</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">open class MoyaProvider&lt;Target: TargetType&gt;: MoyaProviderType</span><br></pre></td></tr></table></figure>
+<p>它的request方法定义了一个请求的几个基本元素</p>
+<ul>
+<li><strong>Target</strong> - 一个请求所需要的基本信息</li>
+<li><strong>callbackQueue</strong> - 回调所在的队列, 默认是主队类(由下层框架Alamofire决定)</li>
+<li><strong>progress</strong> - 请求进度的回调</li>
+<li><strong>completion</strong> - 请求完成的回调</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/// Initializes a provider.</span><br><span class="line">    public init(endpointClosure: @escaping EndpointClosure = MoyaProvider.defaultEndpointMapping,</span><br><span class="line">                requestClosure: @escaping RequestClosure = MoyaProvider.defaultRequestMapping,</span><br><span class="line">                stubClosure: @escaping StubClosure = MoyaProvider.neverStub,</span><br><span class="line">                callbackQueue: DispatchQueue? = nil,</span><br><span class="line">                session: Session = MoyaProvider&lt;Target&gt;.defaultAlamofireSession(),</span><br><span class="line">                plugins: [PluginType] = [],</span><br><span class="line">                trackInflights: Bool = false) &#123;</span><br><span class="line"></span><br><span class="line">        self.endpointClosure = endpointClosure</span><br><span class="line">        self.requestClosure = requestClosure</span><br><span class="line">        self.stubClosure = stubClosure</span><br><span class="line">        self.session = session</span><br><span class="line">        self.plugins = plugins</span><br><span class="line">        self.trackInflights = trackInflights</span><br><span class="line">        self.callbackQueue = callbackQueue</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p> ###<br><strong>MoyaProvider</strong>的初始化方法，除了定义一些上面request方法的入参之外，还包含了以下一些属性配置</p>
+<ul>
+<li><strong>endpointClosure</strong></li>
+<li><strong>requestClosure</strong></li>
+<li><strong>stubClosure</strong></li>
+<li><strong>session</strong></li>
+<li><strong>plugins</strong></li>
+<li><strong>trackInflights</strong></li>
+</ul>
+<h3 id="endpointClosure"><a href="#endpointClosure" class="headerlink" title="endpointClosure"></a>endpointClosure</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/// Closure that defines the endpoints for the provider.</span><br><span class="line">    public typealias EndpointClosure = (Target) -&gt; Endpoint</span><br></pre></td></tr></table></figure>
+<p>这个个闭包将会在每次请求时被执行. 它负责返回一个 Endpoint 实例对象，用来配置Moya.</p>
+<p>大多数情况下, 这个闭包仅仅直接从target，method和task转化为一个 Endpoint 实例对象. 它将在每次request时被执行, 你可以做任何你想要的. 比如, 你可以在里面测试网络错误,如超时、设置header. 以下是Moya提供的默认实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">final class func defaultEndpointMapping(for target: Target) -&gt; Endpoint &#123;</span><br><span class="line">        return Endpoint(</span><br><span class="line">            url: URL(target: target).absoluteString,</span><br><span class="line">            sampleResponseClosure: &#123; .networkResponse(200, target.sampleData) &#125;,</span><br><span class="line">            method: target.method,</span><br><span class="line">            task: target.task,</span><br><span class="line">            httpHeaderFields: target.headers</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>我们来看下<strong>Endpoint</strong>这个对象里做了什么，最主要的就是下面这个方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public func urlRequest() throws -&gt; URLRequest &#123;</span><br><span class="line">        guard let requestURL = Foundation.URL(string: url) else &#123;</span><br><span class="line">            throw MoyaError.requestMapping(url)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        var request = URLRequest(url: requestURL)</span><br><span class="line">        request.httpMethod = method.rawValue</span><br><span class="line">        request.allHTTPHeaderFields = httpHeaderFields</span><br><span class="line"></span><br><span class="line">        switch task &#123;</span><br><span class="line">        case .requestPlain, .uploadFile, .uploadMultipart, .downloadDestination:</span><br><span class="line">            return request</span><br><span class="line">        case .requestData(let data):</span><br><span class="line">            request.httpBody = data</span><br><span class="line">            return request</span><br><span class="line">				.....</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法主要做了以下几件事</p>
+<p><strong>1.Init URLRequest</strong></p>
+<p><strong>2.设置request的url、method、header</strong></p>
+<p><strong>3.根据不同的Task设置request的body</strong></p>
+<p>可以说一个请求的几个关键参数都在在这里设置的，此外<strong>Endpoint</strong>还添加了一些添加header、替换task、支持hash等方法</p>
+<h3 id="requestClosure"><a href="#requestClosure" class="headerlink" title="requestClosure"></a>requestClosure</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/// Closure that decides if and what request should be performed.</span><br><span class="line">    public typealias RequestResultClosure = (Result&lt;URLRequest, MoyaError&gt;) -&gt; Void</span><br><span class="line">    </span><br><span class="line">/// Closure that resolves an `Endpoint` into a `RequestResult`.</span><br><span class="line">    public typealias RequestClosure = (Endpoint, @escaping RequestResultClosure) -&gt; Void</span><br></pre></td></tr></table></figure>
+<p>这个closure主要作用是通过endpoint获取到<strong>URLRequest</strong>对象(有异常则继续对外抛出异常)，我们可以在发送请求前在此对当前这个<strong>urlRequest</strong>做一些修改动作，比如设置timeoutInterval(超时时间)等，以下是默认的<strong>defaultRequestMapping</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">final class func defaultRequestMapping(for endpoint: Endpoint, closure: RequestResultClosure) &#123;</span><br><span class="line">        do &#123;</span><br><span class="line">            let urlRequest = try endpoint.urlRequest()</span><br><span class="line">            closure(.success(urlRequest))</span><br><span class="line">        &#125; catch MoyaError.requestMapping(let url) &#123;</span><br><span class="line">            closure(.failure(MoyaError.requestMapping(url)))</span><br><span class="line">        &#125; catch MoyaError.parameterEncoding(let error) &#123;</span><br><span class="line">            closure(.failure(MoyaError.parameterEncoding(error)))</span><br><span class="line">        &#125; catch &#123;</span><br><span class="line">            closure(.failure(MoyaError.underlying(error, nil)))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="stubClosure"><a href="#stubClosure" class="headerlink" title="stubClosure"></a>stubClosure</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/// Closure that decides if/how a request should be stubbed.</span><br><span class="line">    public typealias StubClosure = (Target) -&gt; Moya.StubBehavior</span><br></pre></td></tr></table></figure>
+<p>这个closure主要是用来配置是否以及如何使用mock的响应数据，一般用于单元测试时使用</p>
+<h3 id="session"><a href="#session" class="headerlink" title="session"></a>session</h3><p>Alamofire中定义的 <strong>Session</strong>对象，Moya只负责请求的组织，具体如何请求的交给底层请求库，默认使用的是Alamofire</p>
+<h3 id="plugins"><a href="#plugins" class="headerlink" title="plugins"></a>plugins</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public protocol PluginType &#123;</span><br><span class="line">    /// Called to modify a request before sending.</span><br><span class="line">    func prepare(_ request: URLRequest, target: TargetType) -&gt; URLRequest</span><br><span class="line"></span><br><span class="line">    /// Called immediately before a request is sent over the network (or stubbed).</span><br><span class="line">    func willSend(_ request: RequestType, target: TargetType)</span><br><span class="line"></span><br><span class="line">    /// Called after a response has been received, but before the MoyaProvider has invoked its completion handler.</span><br><span class="line">    func didReceive(_ result: Result&lt;Moya.Response, MoyaError&gt;, target: TargetType)</span><br><span class="line"></span><br><span class="line">    /// Called to modify a result before completion.</span><br><span class="line">    func process(_ result: Result&lt;Moya.Response, MoyaError&gt;, target: TargetType) -&gt; Result&lt;Moya.Response, MoyaError&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>插件的方法在请求之前和之后会被调用(类似于hook了一个request的生命周期)，我们可以在这边做很多事，比如在prepare中修改request，添加一个HUDPlugin，在请求发起和结束后显示HUD，添加一个LogPlugin，打印request以及response等等。</p>
+<h3 id="trackInflights"><a href="#trackInflights" class="headerlink" title="trackInflights"></a>trackInflights</h3><p>表示是跟踪正在发送的请求, 如果为true, 正在发送的请求将被加入inflightRequests这个字典里, 默认为false</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public let trackInflights: Bool</span><br><span class="line"></span><br><span class="line">open internal(set) var inflightRequests: [Endpoint: [Moya.Completion]] = [:]</span><br></pre></td></tr></table></figure>
+<p>以上就是<strong>MoyaProvider</strong>类中的主要内容，当然其中的很多对象的定义都放到了单独的类(符合单一原则)，比如</p>
+<ul>
+<li>Endpoint.swift</li>
+<li>MoyaProvider+Defaults.swift(定义defaultRequestMapping/defaultEndpointMapping等)</li>
+<li>Plugin.swift</li>
+<li>Moya+Alamofire.swift(关联Alamofire，主要是一些命名空间的重定义和功能的转接)</li>
+<li>RequestTypeWrapper(RequestType包装器)</li>
+<li>ValidationType(状态码过滤)</li>
+</ul>
+<hr>
+<p>对外的<strong>request</strong>方法并没有展示多少细节，相关的实现都放在了internal的<strong>requestNormal</strong>中, 我们来看看这个方法的具体实现细节</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">func requestNormal(_ target: Target, callbackQueue: DispatchQueue?, progress: Moya.ProgressBlock?, completion: @escaping Moya.Completion) -&gt; Cancellable &#123;</span><br><span class="line">		// 通过target + endpointClosure 初始化 获得 endpoint对象</span><br><span class="line">        let endpoint = self.endpoint(target)</span><br><span class="line">        // 通过target + stubClosure 初始化 获得 stubBehavior对象</span><br><span class="line">        let stubBehavior = self.stubClosure(target)</span><br><span class="line">        获取request cancellableToken, 用来后续cancel request</span><br><span class="line">        let cancellableToken = CancellableWrapper()</span><br><span class="line"></span><br><span class="line">        // 遍历plugin，在completion之前 process response</span><br><span class="line">        let pluginsWithCompletion: Moya.Completion = &#123; result in</span><br><span class="line">            let processedResult = self.plugins.reduce(result) &#123; $1.process($0, target: target) &#125;</span><br><span class="line">            completion(processedResult)</span><br><span class="line">        &#125;</span><br><span class="line">		//如果支持追踪请求，那就讲请求以endpoint: [completion]的形式存入字典中, 并返回cancel token</span><br><span class="line">        if trackInflights &#123;</span><br><span class="line">            lock.lock()</span><br><span class="line">            var inflightCompletionBlocks = self.inflightRequests[endpoint]</span><br><span class="line">            inflightCompletionBlocks?.append(pluginsWithCompletion)</span><br><span class="line">            self.inflightRequests[endpoint] = inflightCompletionBlocks</span><br><span class="line">            lock.unlock()</span><br><span class="line"></span><br><span class="line">            if inflightCompletionBlocks != nil &#123;</span><br><span class="line">                return cancellableToken</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                lock.lock()</span><br><span class="line">                self.inflightRequests[endpoint] = [pluginsWithCompletion]</span><br><span class="line">                lock.unlock()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">		// 定义 RequestResultClosure</span><br><span class="line">        let performNetworking = &#123; (requestResult: Result&lt;URLRequest, MoyaError&gt;) in</span><br><span class="line">        	 //如果请求已经取消，走cancel completion</span><br><span class="line">            if cancellableToken.isCancelled &#123;</span><br><span class="line">                self.cancelCompletion(pluginsWithCompletion, target: target)</span><br><span class="line">                return</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            var request: URLRequest!</span><br><span class="line">            switch requestResult &#123;</span><br><span class="line">            case .success(let urlRequest):</span><br><span class="line">                request = urlRequest</span><br><span class="line">            case .failure(let error):</span><br><span class="line">                pluginsWithCompletion(.failure(error))</span><br><span class="line">                return</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            let networkCompletion: Moya.Completion = &#123; result in</span><br><span class="line">              if self.trackInflights &#123;</span><br><span class="line">                self.inflightRequests[endpoint]?.forEach &#123; $0(result) &#125;</span><br><span class="line"></span><br><span class="line">                self.lock.lock()</span><br><span class="line">                self.inflightRequests.removeValue(forKey: endpoint)</span><br><span class="line">                self.lock.unlock()</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                pluginsWithCompletion(result)</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">			// 调用performRequest根据不同Task send request，plugin的遍历、body的设置，statusCodes的过滤等等一些操作都在后续的流程中 </span><br><span class="line">            cancellableToken.innerCancellable = self.performRequest(target, request: request, callbackQueue: callbackQueue, progress: progress, completion: networkCompletion, endpoint: endpoint, stubBehavior: stubBehavior)</span><br><span class="line">        &#125;</span><br><span class="line">			</span><br><span class="line">        requestClosure(endpoint, performNetworking)</span><br><span class="line"></span><br><span class="line">        return cancellableToken</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>上面我们提到<strong>stubClosure</strong>时提到Moya提供了stub的功能，它是使用单独的请求方法，以做stub时的一些处理操作，比如针对plugin和cancel的处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open func stubRequest(_ target: Target, request: URLRequest, callbackQueue: DispatchQueue?, completion: @escaping Moya.Completion, endpoint: Endpoint, stubBehavior: Moya.StubBehavior) -&gt; CancellableToken &#123;//do some thing&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总的来说，<strong>Moya+Alamofire</strong>的组合有点类似于Android中的<strong>Retrofit+OKHttp</strong>，Moya在这里扮演的是一个<strong>网络抽象层</strong>的角色，就源码来说并不复杂，其中设计的思路值得学习学习。</p>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/07/10/Summary-圆角切割/" title="Summary-圆角切割">
+                    <div class="prevTitle">Summary-圆角切割</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzkzNi8yMDQ3Mg==">
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="https://github.com/rainedAllNight" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <a href="mailto:guardweielse@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="https://s2.ax1x.com/2019/04/26/EmfdF1.jpg">
+                </span>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#源码简析-Moya"><span class="toc-number">1.</span> <span class="toc-text">源码简析-Moya</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Target-amp-Task"><span class="toc-number">1.1.</span> <span class="toc-text">Target&amp;Task</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TargetType"><span class="toc-number">1.1.1.</span> <span class="toc-text">TargetType</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task"><span class="toc-number">1.1.2.</span> <span class="toc-text">Task</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MoyaProvider"><span class="toc-number">1.2.</span> <span class="toc-text">MoyaProvider</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#endpointClosure"><span class="toc-number">1.2.1.</span> <span class="toc-text">endpointClosure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#requestClosure"><span class="toc-number">1.2.2.</span> <span class="toc-text">requestClosure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stubClosure"><span class="toc-number">1.2.3.</span> <span class="toc-text">stubClosure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#session"><span class="toc-number">1.2.4.</span> <span class="toc-text">session</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#plugins"><span class="toc-number">1.2.5.</span> <span class="toc-text">plugins</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#trackInflights"><span class="toc-number">1.2.6.</span> <span class="toc-text">trackInflights</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.3.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 14
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href="/2020/07/20/源码简析-Moya/">源码简析-Moya</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href="/2020/07/10/Summary-圆角切割/">Summary-圆角切割</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/24</span><a class="archive-post-title" href="/2019/04/24/使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境/">使用Configurations-+-Scheme-+-User-defined-setting管理你的项目环境</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2019/03/06/iOS蓝牙开发相关知识点和注意事项/">iOS蓝牙开发相关知识点和注意事项</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href="/2018/12/25/使用Mac" 智能文件夹"管理你的项目文件(同类型文件) ">使用Mac"智能文件夹"管理你的项目文件(同类型文件)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href="/2018/07/19/Swift-Tips/">Swift-Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span><a class="archive-post-title" href="/2018/05/11/使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层/">使用-Moya-+-ObjectMapper-Codable-SwiftyJSON-(三选一)封装的一个网络层</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href="/2018/03/06/简单聊聊Swift中的Protocol/">简单聊聊Swift中的Protocol</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2017/12/07/说说最近的一些面试经历/">说说最近的t一些面试经历</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href="/2017/08/06/组件化实践之初体验/">组件化初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2017/04/02/iOS中的URL/">iOS中的URL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span><a class="archive-post-title" href="/2017/02/14/几个简单的轮子/">几个简单的轮子</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href="/2017/01/08/iOS-APP-几种常见特殊(异常-错误)情景的处理/">iOS-APP-几种常见特殊(异常-错误)情景的处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href="/2017/01/07/iOS-tableViewCell自适应行高的计算(8-0及以后)/">iOS-tableViewCell自适应行高的计算(8-0及以后)</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "luowei"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

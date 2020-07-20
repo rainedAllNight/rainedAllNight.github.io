@@ -266,7 +266,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">268</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">260</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -395,12 +395,12 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="圆角切割离屏渲染"><a href="#圆角切割离屏渲染" class="headerlink" title="圆角切割离屏渲染"></a>圆角切割离屏渲染</h1><h2 id="UIImageView"><a href="#UIImageView" class="headerlink" title="UIImageView"></a>UIImageView</h2><ul>
+        <h1 id="UIImageView"><a href="#UIImageView" class="headerlink" title="UIImageView"></a>UIImageView</h1><ul>
 <li>iOS9之后设置<strong>layer. cornerRadius</strong>和<strong>masksToBounds</strong>不会再产生离屏渲染</li>
 <li>但是加上了背景色、边框阴影或其他有图像内容的图层，还是会产生离屏渲染</li>
 </ul>
-<h4 id="设置圆角"><a href="#设置圆角" class="headerlink" title="设置圆角"></a>设置圆角</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">testImageView.layer.cornerRadius = 10</span><br></pre></td></tr></table></figure>
-<h2 id="UIView-amp-UIButton-amp-UILabel"><a href="#UIView-amp-UIButton-amp-UILabel" class="headerlink" title="UIView&amp;UIButton&amp;UILabel"></a>UIView&amp;UIButton&amp;UILabel</h2><h3 id="只设置-layer-cornerRadius"><a href="#只设置-layer-cornerRadius" class="headerlink" title="只设置 layer.cornerRadius"></a>只设置 layer.cornerRadius</h3><ul>
+<h3 id="设置圆角"><a href="#设置圆角" class="headerlink" title="设置圆角"></a>设置圆角</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">testImageView.layer.cornerRadius = 10</span><br></pre></td></tr></table></figure>
+<h1 id="UIView-amp-UIButton-amp-UILabel"><a href="#UIView-amp-UIButton-amp-UILabel" class="headerlink" title="UIView&amp;UIButton&amp;UILabel"></a>UIView&amp;UIButton&amp;UILabel</h1><h3 id="只设置-layer-cornerRadius"><a href="#只设置-layer-cornerRadius" class="headerlink" title="只设置 layer.cornerRadius"></a>只设置 layer.cornerRadius</h3><ul>
 <li>不会产生</li>
 </ul>
 <h3 id="设置-layer-cornerRadius-layer-masksToBounds-对应view的clipsToBounds属性"><a href="#设置-layer-cornerRadius-layer-masksToBounds-对应view的clipsToBounds属性" class="headerlink" title="设置 layer.cornerRadius + layer.masksToBounds(对应view的clipsToBounds属性)"></a>设置 layer.cornerRadius + layer.masksToBounds(对应view的clipsToBounds属性)</h3><ul>
@@ -408,7 +408,7 @@ height:50vh;
 <li>但是加上了文本阴影或其他有图像内容的图层(或子视图)，还是会产生离屏渲染</li>
 </ul>
 <p><strong>需要注意的是UILabel在iOS11及以上这种情况下并不会触发离屏渲染</strong></p>
-<h4 id="设置圆角-1"><a href="#设置圆角-1" class="headerlink" title="设置圆角"></a>设置圆角</h4><ul>
+<h3 id="设置圆角-1"><a href="#设置圆角-1" class="headerlink" title="设置圆角"></a>设置圆角</h3><ul>
 <li>UIView</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">testView.layer.cornerRadius = 10</span><br></pre></td></tr></table></figure>
@@ -420,13 +420,18 @@ height:50vh;
 <li>UIButton</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">文本</span><br><span class="line">testButton.layer.cornerRadius = 10</span><br><span class="line">testButton.setTitle(&quot;Button&quot;, for: .normal)</span><br><span class="line">testButton.backgroundColor = .red</span><br><span class="line"></span><br><span class="line">BackgroundImage</span><br><span class="line">使用UIGraphics 或者 UIBezierPath先切割图片再赋值</span><br><span class="line"></span><br><span class="line">Image</span><br><span class="line">testButton.setImage(UIImage(named: &quot;icon&quot;), for: .normal)</span><br><span class="line">testButton.imageView?.layer.cornerRadius = 10</span><br><span class="line">testButton.imageView?.clipsToBounds = true</span><br></pre></td></tr></table></figure>
-<h4 id="相关阅读iOS圆角的离屏渲染，你真的弄明白了吗"><a href="#相关阅读iOS圆角的离屏渲染，你真的弄明白了吗" class="headerlink" title="相关阅读iOS圆角的离屏渲染，你真的弄明白了吗"></a>相关阅读<a href="https://juejin.im/post/5f0339505188252e817c6c02#heading-2" target="_blank" rel="noopener">iOS圆角的离屏渲染，你真的弄明白了吗</a></h4>
+<h3 id="相关阅读iOS圆角的离屏渲染，你真的弄明白了吗"><a href="#相关阅读iOS圆角的离屏渲染，你真的弄明白了吗" class="headerlink" title="相关阅读iOS圆角的离屏渲染，你真的弄明白了吗"></a>相关阅读<a href="https://juejin.im/post/5f0339505188252e817c6c02#heading-2" target="_blank" rel="noopener">iOS圆角的离屏渲染，你真的弄明白了吗</a></h3>
     </article>
     <!-- license  -->
     
     <!-- paginator  -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2020/07/20/源码简析-Moya/" title="源码简析-Moya">
+                    <div class="nextTitle">源码简析-Moya</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -533,7 +538,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#圆角切割离屏渲染"><span class="toc-number">1.</span> <span class="toc-text">圆角切割离屏渲染</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UIImageView"><span class="toc-number">1.1.</span> <span class="toc-text">UIImageView</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#设置圆角"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">设置圆角</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UIView-amp-UIButton-amp-UILabel"><span class="toc-number">1.2.</span> <span class="toc-text">UIView&amp;UIButton&amp;UILabel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#只设置-layer-cornerRadius"><span class="toc-number">1.2.1.</span> <span class="toc-text">只设置 layer.cornerRadius</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置-layer-cornerRadius-layer-masksToBounds-对应view的clipsToBounds属性"><span class="toc-number">1.2.2.</span> <span class="toc-text">设置 layer.cornerRadius + layer.masksToBounds(对应view的clipsToBounds属性)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#设置圆角-1"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">设置圆角</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#相关阅读iOS圆角的离屏渲染，你真的弄明白了吗"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">相关阅读iOS圆角的离屏渲染，你真的弄明白了吗</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#UIImageView"><span class="toc-number">1.</span> <span class="toc-text">UIImageView</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#设置圆角"><span class="toc-number">1.0.1.</span> <span class="toc-text">设置圆角</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UIView-amp-UIButton-amp-UILabel"><span class="toc-number">2.</span> <span class="toc-text">UIView&amp;UIButton&amp;UILabel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#只设置-layer-cornerRadius"><span class="toc-number">2.0.1.</span> <span class="toc-text">只设置 layer.cornerRadius</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置-layer-cornerRadius-layer-masksToBounds-对应view的clipsToBounds属性"><span class="toc-number">2.0.2.</span> <span class="toc-text">设置 layer.cornerRadius + layer.masksToBounds(对应view的clipsToBounds属性)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置圆角-1"><span class="toc-number">2.0.3.</span> <span class="toc-text">设置圆角</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关阅读iOS圆角的离屏渲染，你真的弄明白了吗"><span class="toc-number">2.0.4.</span> <span class="toc-text">相关阅读iOS圆角的离屏渲染，你真的弄明白了吗</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -689,9 +694,30 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 13
+        Total : 14
         </div>
         <!-- search  -->
         
@@ -704,6 +730,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href="/2020/07/20/源码简析-Moya/">源码简析-Moya</a>
+        </li>
     
     
         <li class="archive-post-item">
