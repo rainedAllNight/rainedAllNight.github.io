@@ -362,10 +362,10 @@ height:70vh;
                 <span>源码简析-Moya</span>
         </a>
         <div class="abstract-content">
-            源码简析-Moya
+            
 如图是Moya/14.0版本的项目结构，在14.0之前Moya使用了自定义的Result包，此版本改为使用了原生的Result包，除此之外还引用了Alamofire这个网络请求库，这篇文章我们将聚焦于Moya本身，简单分析分析Moay的项目源码。
 
-1234567891011121314provider = MoyaProvider&lt;GitHub&gt;()provider.request(.zen) &#123; result in    switch result &#123;    case let .success(moyaResponse):     ...
+1234567891011121314provider = MoyaProvider&lt;GitHub&gt;()provider.request(.zen) &#123; result in    switch result &#123;    case let .success(moyaResponse):        let da...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
